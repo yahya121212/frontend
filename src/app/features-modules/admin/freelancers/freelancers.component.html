@@ -1,0 +1,841 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+  <div class="content container-fluid">
+    <!-- Page Header -->
+    <div class="page-header subscribe-head">
+      <div class="row align-items-center">
+        <div class="col">
+          <h3 class="page-title">Candidats</h3>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a [routerLink]="'/admin/dashboard'">Accueil</a>
+            </li>
+
+            <li class="breadcrumb-item active">Candidats</li>
+          </ul>
+        </div>
+        <div class="col-auto">
+          <ng-container>
+            <a
+              class="btn add-user"
+              href="javascript:void(0)"
+              data-bs-toggle="modal"
+              data-bs-target="#add-candidat"
+            >
+              <i class="fas fa-plus"></i> Ajouter Candidat
+            </a>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="subscribe-employe users-list">
+          <ul class="client-filter">
+            <li>
+              <a
+                (click)="filterCandidatesByStatus(null)"
+                [ngClass]="{ selected: selectedStatus === null }"
+                >Tous les Candidats</a
+              >
+            </li>
+            <li>
+              <a
+                (click)="filterCandidatesByStatus('Active')"
+                [ngClass]="{ selected: selectedStatus === 'Active' }"
+                >Candidats Actifs</a
+              >
+            </li>
+            <li>
+              <a
+                (click)="filterCandidatesByStatus('Inactive')"
+                [ngClass]="{ selected: selectedStatus === 'Inactive' }"
+                >Candidats Inactifs</a
+              >
+            </li>
+            <li>
+              <a
+                (click)="filterCandidatesByStatus('Hired')"
+                [ngClass]="{ selected: selectedStatus === 'Hired' }"
+                >En Mission</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- Active User Header -->
+        <div class="page-header user-active">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="page-title">{{ selectedHederTitle }} Candidats</h3>
+              <p>
+                Total <span>{{ countCandidates }} </span> Candidats
+              </p>
+            </div>
+            <div class="col-auto">
+              <a
+                href="javascript:void(0)"
+                class="btn export-btn me-1"
+                (click)="exportCandidateToCsv()"
+              >
+                <ng-container
+                  *ngIf="!exportSelection; else noCandidatesMessage"
+                >
+                  <img src="assets/admin/img/export.svg" alt="Export icon" />
+                  Exporter
+                </ng-container>
+
+                <ng-template #noCandidatesMessage>
+                  <small class="me-3 text-danger"
+                    >Aucun candidat sélectionné à exporter</small
+                  >
+                </ng-template>
+              </a>
+              <a
+                class="btn fil filter-btn"
+                href="javascript:void(0);"
+                id="filter_search"
+                (click)="openFilter()"
+                (keydown.enter)="openFilter()"
+              >
+                <i class="fas fa-filter"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- /Active User Header -->
+
+        <!-- Search Filter -->
+        <div class="card filter-card" [class.filter-show]="filter">
+          <div class="card-body pb-0">
+            <form [formGroup]="filterForm" (ngSubmit)="onFilterSubmit()">
+              <div class="row filter-row">
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <label for="company-name">Métier</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      formControlName="profileTiltle"
+                      (change)="onChange()"
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <label for="from-date">Nom</label>
+                    <input
+                      formControlName="lastName"
+                      class="form-control"
+                      type="text"
+                      (change)="onChange()"
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <label for="to-date">Prénom</label>
+                    <input
+                      formControlName="firstName"
+                      class="form-control"
+                      type="text"
+                      (change)="onChange()"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row filter-row">
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <label for="city">Ville</label>
+                    <input
+                      formControlName="city"
+                      class="form-control"
+                      type="text"
+                      matInput
+                      [matAutocomplete]="auto"
+                    />
+                    <mat-autocomplete
+                      #auto="matAutocomplete"
+                      [displayWith]="displayFn"
+                    >
+                      @for (city of filteredCityOptions | async; track city) {
+                      <mat-option [value]="city.name">{{
+                        city.name
+                      }}</mat-option>
+                      }
+                    </mat-autocomplete>
+                  </div>
+                </div>
+                <!-- Department -->
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <label for="department">Département</label>
+                    <input
+                      formControlName="department"
+                      class="form-control"
+                      type="text"
+                      matInput
+                      [matAutocomplete]="deptAuto"
+                    />
+                    <mat-autocomplete
+                      #deptAuto="matAutocomplete"
+                      [displayWith]="displayFn"
+                    >
+                      @for (department of filteredDepartmentOptions | async;
+                      track department) {
+                      <mat-option [value]="department.name">{{
+                        department.name
+                      }}</mat-option>
+                      }
+                    </mat-autocomplete>
+                  </div>
+                </div>
+                <!-- Region -->
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <label for="region">Région</label>
+                    <input
+                      formControlName="region"
+                      class="form-control"
+                      type="text"
+                      matInput
+                      [matAutocomplete]="regionAuto"
+                    />
+                    <mat-autocomplete
+                      #regionAuto="matAutocomplete"
+                      [displayWith]="displayFn"
+                    >
+                      @for (region of filteredRegionOptions | async; track
+                      region) {
+                      <mat-option [value]="region.name">{{
+                        region.name
+                      }}</mat-option>
+                      }
+                    </mat-autocomplete>
+                  </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <button
+                      class="btn btn-primary w-100 btn-lg login-btn d-flex align-items-center justify-content-center"
+                      type="submit"
+                    >
+                      Rechercher
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- /Search Filter -->
+
+        <div class="card bg-white projects-card">
+          <div class="card-body pt-0">
+            <div class="tab-content pt-0">
+              <div role="tabpanel" id="tab-4" class="tab-pane fade active show">
+                <div class="table-responsive">
+                  <div class="table_header">
+                    <div class="dataTables_length mt-2">
+                      <label for="entries"> Afficher </label>
+                      <select
+                        [(ngModel)]="pageSize"
+                        (ngModelChange)="changePageSize()"
+                        class="form-control form-control-sm"
+                      >
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                      </select>
+                      <label entries-data for="data-entries">entrées</label>
+                    </div>
+                    <div class="dataTables_filter">
+                      <label for="search"> Rechercher: </label>
+                      <input
+                        [(ngModel)]="searchDataValue"
+                        (ngModelChange)="searchData(searchDataValue)"
+                        class="form-control form-control-sm"
+                      />
+                    </div>
+                  </div>
+                  <div class="table-scroll">
+                    <table
+                      matSort
+                      (matSortChange)="sortData($event)"
+                      class="table table-center table-hover mb-0 datatable"
+                    >
+                      <thead>
+                        <tr>
+                          <th>
+                            <input
+                              type="checkbox"
+                              name="customCheckAll"
+                              id="customCheckAll"
+                              (click)="toggleCheckBoxes($event)"
+                            />
+                          </th>
+                          <th mat-sort-header="name">Candidate</th>
+                          <th>CV</th>
+                          <th mat-sort-header="phone">Téléphone</th>
+                          <th mat-sort-header="job">Métier</th>
+                          <th mat-sort-header="verification">Vérification</th>
+                          <th mat-sort-header="insciption">
+                            Date d'inscription
+                          </th>
+                          <th mat-sort-header="lastConnexion">
+                            Derniére connexion
+                          </th>
+                          <th mat-sort-header="status">Status</th>
+                          <th class="text-end"></th>
+                        </tr>
+                        @if (lstBoard.length === 0) {
+                        <tr>
+                          <td colspan="9">
+                            <h5 style="text-align: center">
+                              Aucune donnée trouvée
+                            </h5>
+                          </td>
+                        </tr>
+                        }
+                      </thead>
+                      <tbody>
+                        @for (candidate of lstBoard; track candidate; let i =
+                        $index) {
+                        <tr>
+                          <td>
+                            <div class="form-check custom-checkbox">
+                              <input
+                                type="checkbox"
+                                class="form-check-input"
+                                [value]="candidate?.id"
+                                [checked]="isSelected(candidate)"
+                                (change)="onCheckboxChange(candidate, $event)"
+                              />
+                            </div>
+                          </td>
+                          <td
+                            class="d-flex align-items-center border border-0"
+                            (click)="getProfile(candidate)"
+                          >
+                            <span class="user-img">
+                              <img
+                                class="profile-initials"
+                                [src]="baseUrl + candidate.image"
+                                *ngIf="candidate.image !== null"
+                              />
+                              <div
+                                class="profile-initials"
+                                *ngIf="
+                                  getInitials(candidate) &&
+                                  candidate.image === null
+                                "
+                              >
+                                {{ getInitials(candidate) }}
+                              </div>
+                            </span>
+                            {{ getContact(candidate) }}
+                          </td>
+
+                          <td>
+                            <span
+                              *ngFor="
+                                let doc of getCvDocuments(
+                                  candidate.personalDocuments
+                                )
+                              "
+                            >
+                              <a
+                                href="javascript:void(0)"
+                                class="btn btn-sm btn-outline-primary"
+                                (click)="showCVModal(doc.link)"
+                                title="Voir le CV"
+                              >
+                                <i class="far fa-file-pdf me-1"></i>
+                                Voir CV
+                              </a>
+                            </span>
+                            <span
+                              *ngIf="
+                                getCvDocuments(candidate.personalDocuments)
+                                  .length === 0
+                              "
+                              class="text-muted"
+                            >
+                              <i class="far fa-file-pdf me-1"></i>
+                              Pas de CV
+                            </span>
+                          </td>
+
+                          <td (click)="getProfile(candidate)">
+                            {{ candidate?.phone }}
+                          </td>
+                          <td (click)="getProfile(candidate)">
+                            <div>
+                              {{ candidate?.profileTitle }}
+                            </div>
+                          </td>
+                          <td (click)="getProfile(candidate)">
+                            <i
+                              class="fa-regular fa-circle-check me-1"
+                              style="font-size: 16px"
+                              [ngClass]="{
+                                'text-success': candidate.emailVerifiedAt
+                              }"
+                            >
+                            </i>
+                            Email
+                          </td>
+                          <td (click)="getProfile(candidate)">
+                            {{ getDate(candidate.createdAt) }}
+                          </td>
+                          <td (click)="getProfile(candidate)">
+                            {{ getDate(candidate.lastConnection) }}
+                          </td>
+                          <td (click)="getProfile(candidate)">
+                            <div
+                              [ngClass]="{
+                                'text-success':
+                                  candidate.status.name === 'Active',
+                                'text-danger':
+                                  candidate.status.name === 'Inactive',
+                                'text-warning':
+                                  candidate.status.name === 'Hired'
+                              }"
+                            >
+                              {{ candidate.status.name }}
+                            </div>
+                          </td>
+                          <td class="text-end" data-bs-toggle="dropdown">
+                            <div class="hide-shave">
+                              <a
+                                href="javascript:void(0)"
+                                class="dropdown-toggle nav-link"
+                                ><i class="fas fa-ellipsis-v"></i
+                              ></a>
+                              <div class="dropdown-menu user-menu-list">
+                                <a
+                                  class="dropdown-item"
+                                  data-dismiss="modal"
+                                  *ngIf="candidate.status.name === 'Active'"
+                                  [routerLink]="
+                                    candidate.status.name === 'Active'
+                                      ? routes.get_admin_candidate(candidate.id)
+                                      : null
+                                  "
+                                >
+                                  <i class="fa-solid fa-pen text-info"></i>
+                                  Editer
+                                </a>
+                                <a
+                                  class="dropdown-item"
+                                  href="javascript:void(0)"
+                                  (click)="
+                                    this.showDeleteCategoryModal(candidate)
+                                  "
+                                  data-dismiss="modal"
+                                  ><i
+                                    class="feather icon-trash text-danger"
+                                  ></i>
+                                  Supprimer</a
+                                >
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="table_footer">
+                  <div class="col-sm-12 col-md-5"></div>
+
+                  <div class="col-sm-12 col-md-7">
+                    <div class="pagination_section">
+                      <ul class="pagination">
+                        <li
+                          class="page-item"
+                          [ngClass]="{
+                            disabled: currentPage === 1
+                          }"
+                        >
+                          <a
+                            (click)="getMoreData('previous')"
+                            (keydown.enter)="getMoreData('previous')"
+                            class="page-link"
+                            href="javascript:void(0);"
+                            tabindex="-1"
+                            >Previous</a
+                          >
+                        </li>
+
+                        @for (item of pageNumberArray; track item; let i =
+                        $index) {
+                        <li
+                          class="page-item"
+                          [class.active]="item === currentPage"
+                          [ngClass]="
+                            (pageNumberArray[currentPage - 2] > item &&
+                              item !== 1 &&
+                              pageNumberArray.length > 6) ||
+                            (pageNumberArray[currentPage] < item &&
+                              item !== 1 &&
+                              pageNumberArray.length > 6 &&
+                              pageNumberArray.length !== item)
+                              ? 'hide-page-no'
+                              : 'show-page-no'
+                          "
+                        >
+                          <a
+                            (click)="moveToPage(item)"
+                            (keydown.enter)="moveToPage(item)"
+                            class="page-link"
+                            href="javascript:void(0);"
+                          >
+                            {{ item }}
+                          </a>
+                        </li>
+                        @if ( i === 0 && pageNumberArray.length > 6 &&
+                        currentPage > 2 ) {
+                        <li
+                          class="page-item"
+                          [hidden]="currentPage === 1"
+                          (click)="moveToPage(currentPage - 2)"
+                          (keydown.enter)="moveToPage(currentPage - 2)"
+                          tabindex="0"
+                        >
+                          <a class="page-link" href="javascript:void(0);">
+                            ...
+                          </a>
+                        </li>
+                        } @if ( i === pageNumberArray.length - 2 &&
+                        pageNumberArray.length > 6 ) {
+                        <li
+                          [hidden]="
+                            currentPage >=
+                              pageNumberArray[pageNumberArray.length - 2] ||
+                            totalData <
+                              serialNumberArray[serialNumberArray.length - 1]
+                          "
+                          class="page-item"
+                          (click)="moveToPage(currentPage + 2)"
+                          (keydown.enter)="moveToPage(currentPage + 2)"
+                          tabindex="0"
+                        >
+                          <a class="page-link" href="javascript:void(0);">
+                            ...
+                          </a>
+                        </li>
+                        } }
+
+                        <li
+                          class="page-item"
+                          [ngClass]="{
+                            disabled:
+                              currentPage ===
+                                pageNumberArray[pageNumberArray.length - 1] ||
+                              lstBoard.length === 0
+                          }"
+                        >
+                          <a
+                            (click)="getMoreData('next')"
+                            (keydown.enter)="getMoreData('next')"
+                            class="page-link"
+                            href="javascript:void(0);"
+                            >Next
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <!--New one-->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /Page Wrapper -->
+      </div>
+
+      <!-- Delete Modal -->
+      <div class="modal custom-modal fade" id="delete_client" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="form-header">
+                <h3>Supprimer</h3>
+                <p>Êtes-vous sur de vouloir supprimer</p>
+                <p>
+                  <strong class="text-danger"
+                    >{{ getContact(candidateToDelete) }} ?</strong
+                  >
+                </p>
+              </div>
+              <div class="modal-btn delete-action">
+                <div class="row">
+                  <div class="col-6">
+                    <a
+                      href="javascript:void(0);"
+                      class="btn btn-primary continue-btn"
+                      (click)="deleteCandidate(candidateToDelete)"
+                      >Supprimer</a
+                    >
+                  </div>
+                  <div class="col-6">
+                    <a
+                      href="javascript:void(0);"
+                      data-bs-dismiss="modal"
+                      class="btn btn-primary cancel-btn"
+                      >Annuler</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /Delete Modal -->
+    </div>
+  </div>
+
+  <!-- Add Modal -->
+  <div class="modal fade custom-modal" id="add-candidat">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header flex-wrap">
+          <div class="text-center w-100 mb-3">
+            <img src="assets/img/interim.png" alt="" />
+          </div>
+          <h4 class="modal-title">Ajouter un Client</h4>
+          <button type="button" class="close" data-bs-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <form [formGroup]="addCandidateForm" (ngSubmit)="onCandidateSubmit()">
+            <!-- First Name -->
+            <div class="input-block">
+              <label for="firstName" class="focus-label"
+                >Prénom <span class="label-star"> *</span></label
+              >
+              <input
+                id="firstName"
+                formControlName="firstName"
+                type="text"
+                class="form-control floating"
+                [ngClass]="{
+                  'is-invalid':
+                    addCandidateForm.get('firstName')?.invalid &&
+                    (addCandidateForm.get('firstName')?.touched ||
+                      addCandidateForm.get('firstName')?.dirty)
+                }"
+              />
+              <div
+                *ngIf="
+                  addCandidateForm.get('firstName')?.touched &&
+                  addCandidateForm.get('firstName')?.invalid
+                "
+                class="text-danger"
+              >
+                <div
+                  *ngIf="addCandidateForm.get('firstName')?.errors?.['required']"
+                >
+                  Le prénom est obligatoire.
+                </div>
+              </div>
+            </div>
+
+            <!-- Last Name -->
+            <div class="input-block">
+              <label for="lastName" class="focus-label"
+                >Nom <span class="label-star"> *</span></label
+              >
+              <input
+                id="lastName"
+                formControlName="lastName"
+                type="text"
+                class="form-control floating"
+                [ngClass]="{
+                  'is-invalid':
+                    addCandidateForm.get('lastName')?.invalid &&
+                    (addCandidateForm.get('lastName')?.touched ||
+                      addCandidateForm.get('lastName')?.dirty)
+                }"
+              />
+              <div
+                *ngIf="
+                  addCandidateForm.get('lastName')?.touched &&
+                  addCandidateForm.get('lastName')?.invalid
+                "
+                class="text-danger"
+              >
+                <div
+                  *ngIf="addCandidateForm.get('lastName')?.errors?.['required']"
+                >
+                  Le nom est obligatoire.
+                </div>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="input-block">
+              <label for="email" class="focus-label"
+                >Email <span class="label-star"> *</span></label
+              >
+              <input
+                id="email"
+                formControlName="email"
+                type="email"
+                class="form-control floating"
+                [ngClass]="{
+                  'is-invalid':
+                    addCandidateForm.get('email')?.invalid &&
+                    (addCandidateForm.get('email')?.touched ||
+                      addCandidateForm.get('email')?.dirty)
+                }"
+              />
+              <div
+                *ngIf="
+                  addCandidateForm.get('email')?.touched &&
+                  addCandidateForm.get('email')?.invalid
+                "
+                class="text-danger"
+              >
+                <div
+                  *ngIf="addCandidateForm.get('email')?.errors?.['required']"
+                >
+                  L'email est obligatoire.
+                </div>
+                <div *ngIf="addCandidateForm.get('email')?.errors?.['email']">
+                  Veuillez entrer une adresse email valide.
+                </div>
+              </div>
+            </div>
+            <hr />
+            <button
+              type="submit"
+              class="btn btn-primary w-100 btn-lg login-btn d-flex align-items-center justify-content-center"
+              [disabled]="isSubmitting || addCandidateForm.invalid"
+            >
+              <span *ngIf="!isSubmitting">Ajouter</span>
+              <span
+                *ngIf="isSubmitting"
+                class="spinner-border spinner-border-sm"
+                role="status"
+              ></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add Modal -->
+</div>
+
+<div class="modal fade custom-modal" id="success-added">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header flex-wrap">
+        <div class="text-center w-100 mb-3">
+          <img src="assets/img/interim.png" alt="" />
+        </div>
+        <h4 class="modal-title">Candidat créé avec succès</h4>
+        <button type="button" class="close" data-bs-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body parent">
+        <p>
+          <strong>Identifiants par défaut :</strong><br />
+          <i class="fas fa-envelope"></i> Email :
+          <span class="highlight" (click)="copyToClipboard(userEmail)">{{
+            userEmail
+          }}</span
+          ><br />
+          <i class="fas fa-key"></i> Mot de passe temporaire :
+          <span class="warning" (click)="copyToClipboard('admin1234')"
+            >admin1234</span
+          >
+        </p>
+
+        <div class="alert alert-warning">
+          <i class="fas fa-exclamation-triangle"></i>
+          Le candidat doit se connecter et modifier son mot de passe dès la
+          première connexion.
+        </div>
+
+        <p class="instructions">
+          Pour compléter le profil :<br />
+          1. Transmettez ces identifiants au candidat<br />
+          2. Demandez-lui de se connecter
+          <span class="ici text-danger" (click)="requestLogin(userEmail)"
+            >ici</span
+          >
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade custom-modal" id="cv-modal" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">CV du candidat</h4>
+        <div class="d-flex gap-2 ms-3">
+          <button
+            type="button"
+            class="btn btn-outline-info"
+            (click)="downloadCV()"
+            title="Télécharger"
+          >
+            <i class="fa-solid fa-download"></i>
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-info"
+            (click)="openFullscreen()"
+            title="Plein écran"
+          >
+            <i class="fa-solid fa-expand"></i>
+          </button>
+          <button
+            type="button"
+            class="close"
+            data-bs-dismiss="modal"
+            aria-label="Fermer"
+          >
+            <span>&times;</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body pdf-container">
+        <ng-container *ngIf="!showPdf">
+          <div class="text-center p-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">chargement...</span>
+            </div>
+            <p class="mt-3">chargement du CV...</p>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="showPdf">
+          <pdf-viewer
+            [src]="cvUrl"
+            [render-text]="true"
+            [original-size]="false"
+            (error)="onPdfError($event)"
+            *ngIf="cvUrl"
+            style="width: 100%; height: 100%"
+          >
+          </pdf-viewer>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

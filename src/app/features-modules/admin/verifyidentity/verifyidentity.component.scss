@@ -1,0 +1,82 @@
+.icon-buttons {
+  display: flex;
+  gap: 8px; /* Space between buttons */
+}
+
+.icon-buttons i {
+  cursor: pointer; /* Change cursor to pointer on hover */
+  padding: 8px 12px; /* Add padding to make it look like a button */
+  border-radius: 4px; /* Rounded corners */
+  border: 1px solid transparent; /* Transparent border */
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s; /* Smooth transitions */
+}
+
+/* Eye icon (View details) */
+.icon-buttons .fa-eye {
+  background-color: #007bff; /* Blue background */
+  color: white; /* White icon */
+}
+
+.icon-buttons .fa-eye:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Xmark icon (Reject) */
+.icon-buttons .fa-xmark,
+.icon-buttons .fa-xmarks-lines {
+  background-color: #dc3545; /* Red background */
+  color: white; /* White icon */
+}
+
+.icon-buttons .fa-xmark:hover,
+.icon-buttons .fa-xmarks-lines:hover {
+  background-color: #a71d2a; /* Darker red on hover */
+}
+
+/* Check icon (Approve) */
+.icon-buttons .fa-check,
+.icon-buttons .fa-check-double {
+  background-color: #28a745; /* Green background */
+  color: white; /* White icon */
+}
+
+.icon-buttons .fa-check:hover,
+.icon-buttons .fa-check-double:hover {
+  background-color: #1e7e34; /* Darker green on hover */
+}
+
+.icon-buttons .fa-check-double {
+  width: 44px;
+}
+
+.empty-state-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh; /* Takes 60% of viewport height */
+  text-align: center;
+}
+
+.empty-state-message {
+  font-size: 1.5rem; /* Larger font size */
+  color: #555; /* Slightly darker than text-muted */
+  padding: 2rem;
+  background-color: #f8f9fa; /* Light background */
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  color: #6c757d;
+  margin-bottom: 1rem;
+}
+
+.empty-state-message h3 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}

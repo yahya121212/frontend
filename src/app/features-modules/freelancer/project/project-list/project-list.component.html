@@ -1,0 +1,425 @@
+<!-- Page Content -->
+<div class="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
+        <!-- Search Filter -->
+        <div class="card search-filter mt-3">
+          <div
+            class="card-header d-flex justify-content-between"
+            style="background-color: #fff6f1 !important"
+          >
+            <h4 class="card-title mb-0">Filtre de recherche</h4>
+          </div>
+          <div class="card-body">
+            <div class="filter-widget">
+              <h4 class="filter-title">
+                <a
+                  href="javascript:void(0);"
+                  class="w-100"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  Activité
+                  <span class="float-end"
+                    ><i class="fa-solid fa-chevron-down"></i
+                  ></span>
+                </a>
+              </h4>
+              <div
+                id="collapseOne"
+                class="collapse show"
+                data-bs-parent="#accordionExample1"
+              >
+                <!-- Show only a limited number of activities -->
+                <div
+                  *ngFor="
+                    let activity of activities.slice(0, displayedActivities)
+                  "
+                >
+                  <label class="custom_check">
+                    <input
+                      type="checkbox"
+                      name="select_activity"
+                      [value]="activity.activityName"
+                      (change)="onActivityChange($event)"
+                    />
+                    <span class="checkmark"></span>
+                    {{ activity.activityName }} ({{ activity.offerCount }})
+                  </label>
+                </div>
+
+                <!-- Show More / Show Less Button -->
+                <div
+                  class="showmore mt-2"
+                  *ngIf="displayedActivities < activities.length"
+                >
+                  <a href="javascript:void(0);" (click)="showMore()">
+                    <i class="feather icon-plus me-1"></i> Afficher Plus
+                  </a>
+                </div>
+
+                <div class="showmore mt-2" *ngIf="displayedActivities > 5">
+                  <a href="javascript:void(0);" (click)="showLess()">
+                    <i class="feather icon-minus me-1"></i> Afficher Moins
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="filter-widget">
+              <h4 class="filter-title">
+                <a
+                  href="javascript:void(0);"
+                  class="w-100"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseskills"
+                  aria-expanded="true"
+                  aria-controls="collapseskills"
+                >
+                  Sous-Activité
+                  <span class="float-end"
+                    ><i class="fa-solid fa-chevron-down"></i
+                  ></span>
+                </a>
+              </h4>
+              <div
+                id="collapseskills"
+                class="collapse show"
+                data-bs-parent="#accordionExample1"
+              >
+                <!-- Display only a limited number of sub-activities -->
+                <div
+                  *ngFor="
+                    let subActivity of subActivities.slice(
+                      0,
+                      displayedSubActivities
+                    )
+                  "
+                >
+                  <label class="custom_check">
+                    <input
+                      type="checkbox"
+                      name="select_subactivity"
+                      [value]="subActivity.subActivityName"
+                      (change)="onSubActivityChange($event)"
+                    />
+                    <span class="checkmark"></span>
+                    {{ subActivity.subActivityName }} ({{
+                      subActivity.offerCount
+                    }})
+                  </label>
+                </div>
+
+                <!-- Show More Button -->
+                <div
+                  class="showmore mt-2"
+                  *ngIf="displayedSubActivities < subActivities.length"
+                >
+                  <a
+                    href="javascript:void(0);"
+                    (click)="showMoreSubActivities()"
+                  >
+                    <i class="feather icon-plus me-1"></i> Afficher Plus
+                  </a>
+                </div>
+
+                <!-- Show Less Button -->
+                <div class="showmore mt-2" *ngIf="displayedSubActivities > 5">
+                  <a
+                    href="javascript:void(0);"
+                    (click)="showLessSubActivities()"
+                  >
+                    <i class="feather icon-minus me-1"></i> Afficher Moins
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="filter-widget">
+              <h4 class="filter-title">
+                <a
+                  href="javascript:void(0);"
+                  class="w-100"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapselanguagea"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  Type de contrat
+                  <span class="float-end"
+                    ><i class="fa-solid fa-chevron-down"></i
+                  ></span>
+                </a>
+              </h4>
+              <div
+                id="collapselanguagea"
+                class="collapse show"
+                data-bs-parent="#accordionExample1"
+              >
+                <!-- Loop through contract types -->
+                <div *ngFor="let contractType of contractTypes">
+                  <label class="custom_check">
+                    <input
+                      type="checkbox"
+                      name="select_contractType"
+                      [value]="contractType.contractTypeDescription"
+                      (change)="onContractTypeChange($event)"
+                    />
+                    <span class="checkmark"></span>
+                    {{ contractType.contractTypeDescription }} ({{
+                      contractType.offerCount
+                    }})
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-search">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="applyFilters()"
+              >
+                Filter
+              </button>
+              <button
+                type="button"
+                class="btn btn-block"
+                (click)="resetFilters()"
+              >
+                Initialiser
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- /Search Filter -->
+      </div>
+      <div class="col-md-12 col-lg-8 col-xl-9 mt-3">
+        <div class="sort-tab develop-list-select">
+          <div class="row align-items-center">
+            <!-- Search Filter -->
+            <div class="card filter-card" [class.filter-show]="filter">
+              <div class="card-body pb-0">
+                <form [formGroup]="filterForm" (ngSubmit)="onFilterSubmit()">
+                  <div class="row filter-row">
+                    <div class="col-sm-12 col-md-12">
+                      <div class="form-group">
+                        <label for="company-name">Titre du poste</label>
+                        <input
+                          class="form-control"
+                          type="text"
+                          formControlName="title"
+                          (change)="onChange()"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row filter-row">
+                    <div class="col-sm-12 col-md-3">
+                      <div class="form-group">
+                        <label for="from-date">Ville </label>
+                        <input
+                          formControlName="city"
+                          class="form-control"
+                          type="text"
+                          (change)="onChange()"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                      <div class="form-group">
+                        <label for="to-date">Département </label>
+                        <input
+                          formControlName="department"
+                          class="form-control"
+                          type="text"
+                          (change)="onChange()"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                      <div class="form-group">
+                        <label for="city">Région </label>
+                        <input
+                          formControlName="region"
+                          class="form-control"
+                          type="text"
+                          (change)="onChange()"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                      <div class="form-group">
+                        <button
+                          class="btn btn-primary w-100 btn-lg login-btn d-flex align-items-center justify-content-center"
+                          type="submit"
+                        >
+                          Rechercher
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- /Search Filter -->
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+              <div class="d-flex align-items-center">
+                <div class="freelance-view">
+                  <h4>{{ totalOffers }} résultats trouvés</h4>
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-xl-6 col-lg-6 col-md-6 col-sm-6 d-flex justify-content-sm-end"
+            >
+              <ul class="list-grid d-flex align-items-center">
+                <!-- <li>
+                  <a [routerLink]="routes.freelancerProject"
+                    ><i class="fas fa-th-large"></i
+                  ></a>
+                </li> -->
+                <!-- <li>
+                  <a [routerLink]="routes.projectList" class="favour-active"
+                    ><i class="fas fa-list"></i
+                  ></a>
+                </li> -->
+                <li>
+                  <a
+                    class="favour-active"
+                    href="javascript:void(0);"
+                    id="filter_search"
+                    (click)="openFilter()"
+                    (keydown.enter)="openFilter()"
+                  >
+                    <i class="fas fa-filter ms-2"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="list-book-mark book-mark favour-book">
+          <div class="row">
+            <div class="col-lg-12">
+              <div
+                *ngFor="let offer of paginatedOffers; let i = index"
+                class="project-list-card"
+              >
+                <a
+                  href="javascript:void(0);"
+                  class="add-fav-list"
+                  [ngClass]="{ checked: like[i] }"
+                  (click)="toggleLike(i)"
+                  ><i class="fa-regular fa-heart"></i
+                ></a>
+                <div class="company-detail-image">
+                  <img
+                    [src]="
+                      offer?.company?.image !== null
+                        ? baseUrl + offer?.company?.image
+                        : ''
+                    "
+                    class="img-fluid"
+                    alt="logo"
+                  />
+                </div>
+                <div>
+                  <div class="company-title">
+                    <p>{{ offer?.job?.subActivity?.name }}</p>
+                    <h4>{{ offer?.title }}</h4>
+                  </div>
+                  <div class="company-splits">
+                    <div>
+                      <div class="d-flex">
+                        <div class="freelance-location">
+                          <i class="feather icon-map-pin me-1"></i
+                          >{{ offer?.city?.name }},
+                          {{ offer?.city?.department?.region?.name }}
+                        </div>
+                        <div class="freelance-location ms-3">
+                          <i class="feather icon-calendar me-1"></i>Postuler le:
+                          {{ offer?.publicationDate }}
+                        </div>
+                      </div>
+                      <div class="company-description">
+                        <p
+                          [innerHTML]="getSafeDescription(offer.description)"
+                        ></p>
+                      </div>
+                      <div class="company-description">
+                        <div class="tags">
+                          <div
+                            *ngFor="let skill of offer?.skills"
+                            class="skill-badge"
+                          >
+                            <span class="badge badge-pill badge-design">{{
+                              skill.name
+                            }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="company-split-price">
+                      <h6>
+                        A partir de :{{ offer?.salaryType?.salary }} € |
+                        {{ offer?.salaryType?.type }}
+                      </h6>
+                      <a
+                        href="javascript:void(0);"
+                        class="btn btn-submits"
+                        (click)="postulerBtn(offer?.id)"
+                        >Détails</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <ul class="paginations list-pagination">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                  <a
+                    (click)="changePage(currentPage - 1)"
+                    [class.disabled]="currentPage === 1"
+                  >
+                    <i class="feather icon-chevron-left"></i>
+                  </a>
+                </li>
+
+                @for (page of getPageNumbers(); track page) {
+                <li class="page-item">
+                  <a
+                    (click)="changePage(page)"
+                    [class.active]="currentPage === page"
+                  >
+                    {{ page }}
+                  </a>
+                </li>
+                }
+
+                <li
+                  class="page-item"
+                  [class.disabled]="currentPage === totalPages"
+                >
+                  <a
+                    (click)="changePage(currentPage + 1)"
+                    [class.disabled]="currentPage === totalPages"
+                  >
+                    <i class="feather icon-chevron-right"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Page Content -->

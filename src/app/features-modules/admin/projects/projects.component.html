@@ -1,0 +1,829 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+  <div class="content container-fluid">
+    <!-- Page Header -->
+    <div class="page-header subscribe-head">
+      <div class="row align-items-center">
+        <div class="col">
+          <h3 class="page-title">Clients</h3>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a [routerLink]="'/admin/dashboard'">Accueil</a>
+            </li>
+
+            <li class="breadcrumb-item active">Clients</li>
+          </ul>
+        </div>
+        <div class="col-auto">
+          <ng-container>
+            <a
+              class="btn add-user"
+              href="javascript:void(0)"
+              data-bs-toggle="modal"
+              data-bs-target="#add-company"
+            >
+              <i class="fas fa-plus"></i> Ajouter un Client
+            </a>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="subscribe-employe users-list">
+          <ul class="client-filter">
+            <li>
+              <a
+                (click)="filterCompaniesByStatus(null)"
+                [ngClass]="{ selected: selectedStatus === null }"
+                >Tous les Clients</a
+              >
+            </li>
+            <li>
+              <a
+                (click)="filterCompaniesByStatus('Active')"
+                [ngClass]="{ selected: selectedStatus === 'Active' }"
+                >Clients Actifs</a
+              >
+            </li>
+            <li>
+              <a
+                (click)="filterCompaniesByStatus('Inactive')"
+                [ngClass]="{ selected: selectedStatus === 'Inactive' }"
+                >Clients Inactifs</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- Active User Header -->
+        <div class="page-header user-active">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="page-title">{{ selectedHederTitle }} Clients</h3>
+              <p>
+                Total <span>{{ countClient }} </span> clients
+              </p>
+            </div>
+            <div class="col-auto">
+              <a
+                href="javascript:void(0)"
+                class="btn export-btn me-1"
+                (click)="exportCompaniesToCsv()"
+              >
+                <ng-container *ngIf="!exportSelection; else noCompaniesMessage">
+                  <img src="assets/admin/img/export.svg" alt="Export icon" />
+                  Exporter
+                </ng-container>
+
+                <ng-template #noCompaniesMessage>
+                  <small class="me-3 text-danger"
+                    >Aucun client sélectionné à exporter</small
+                  >
+                </ng-template>
+              </a>
+              <a
+                class="btn fil filter-btn"
+                href="javascript:void(0);"
+                id="filter_search"
+                (click)="openFilter()"
+                (keydown.enter)="openFilter()"
+              >
+                <i class="fas fa-filter"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- /Active User Header -->
+
+        <!-- Search Filter -->
+        <div class="card filter-card" [class.filter-show]="filter">
+          <div class="card-body pb-0">
+            <form [formGroup]="filterForm" (ngSubmit)="onFilterSubmit()">
+              <div class="row filter-row">
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <label for="company-name">Nom Entreprise</label>
+                    <input
+                      class="form-control"
+                      type="text"
+                      formControlName="companyName"
+                      (change)="onChange()"
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <label for="from-date">Nom Contact</label>
+                    <input
+                      formControlName="contactLName"
+                      class="form-control"
+                      type="text"
+                      (change)="onChange()"
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <label for="to-date">Prénom Contact</label>
+                    <input
+                      formControlName="contactFName"
+                      class="form-control"
+                      type="text"
+                      (change)="onChange()"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row filter-row">
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <label for="city">Ville</label>
+                    <input
+                      formControlName="city"
+                      class="form-control"
+                      type="text"
+                      matInput
+                      [matAutocomplete]="auto"
+                    />
+                    <mat-autocomplete
+                      #auto="matAutocomplete"
+                      [displayWith]="displayFn"
+                    >
+                      @for (city of filteredCityOptions | async; track city) {
+                      <mat-option [value]="city.name">{{
+                        city.name
+                      }}</mat-option>
+                      }
+                    </mat-autocomplete>
+                  </div>
+                </div>
+                <!-- Department -->
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <label for="department">Département</label>
+                    <input
+                      formControlName="department"
+                      class="form-control"
+                      type="text"
+                      matInput
+                      [matAutocomplete]="deptAuto"
+                    />
+                    <mat-autocomplete
+                      #deptAuto="matAutocomplete"
+                      [displayWith]="displayFn"
+                    >
+                      @for (department of filteredDepartmentOptions | async;
+                      track department) {
+                      <mat-option [value]="department.name">{{
+                        department.name
+                      }}</mat-option>
+                      }
+                    </mat-autocomplete>
+                  </div>
+                </div>
+                <!-- Region -->
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <label for="region">Région</label>
+                    <input
+                      formControlName="region"
+                      class="form-control"
+                      type="text"
+                      matInput
+                      [matAutocomplete]="regionAuto"
+                    />
+                    <mat-autocomplete
+                      #regionAuto="matAutocomplete"
+                      [displayWith]="displayFn"
+                    >
+                      @for (region of filteredRegionOptions | async; track
+                      region) {
+                      <mat-option [value]="region.name">{{
+                        region.name
+                      }}</mat-option>
+                      }
+                    </mat-autocomplete>
+                  </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                  <div class="form-group">
+                    <button
+                      class="btn btn-primary w-100 btn-lg login-btn d-flex align-items-center justify-content-center"
+                      type="submit"
+                    >
+                      Rechercher
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- /Search Filter -->
+
+        <div class="card bg-white projects-card">
+          <div class="card-body pt-0">
+            <div class="tab-content pt-0">
+              <div role="tabpanel" id="tab-4" class="tab-pane fade active show">
+                <div class="table-responsive">
+                  <div class="table_header">
+                    <div class="dataTables_length mt-2">
+                      <label for="entries"> Afficher </label>
+                      <select
+                        [(ngModel)]="pageSize"
+                        (ngModelChange)="changePageSize()"
+                        class="form-control form-control-sm"
+                      >
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                      </select>
+                      <label entries-data for="data-entries">entrées</label>
+                    </div>
+                    <div class="dataTables_filter">
+                      <label for="search"> Rechercher: </label>
+                      <input
+                        [(ngModel)]="searchDataValue"
+                        (ngModelChange)="searchData(searchDataValue)"
+                        class="form-control form-control-sm"
+                      />
+                    </div>
+                  </div>
+                  <div class="table-scroll">
+                    <table
+                      matSort
+                      (matSortChange)="sortData($event)"
+                      class="table table-center table-hover mb-0 datatable"
+                    >
+                      <thead>
+                        <tr>
+                          <th>
+                            <input
+                              type="checkbox"
+                              name="customCheckAll"
+                              id="customCheckAll"
+                              (click)="toggleCheckBoxes($event)"
+                            />
+                          </th>
+                          <th mat-sort-header="createdAt">Date de création</th>
+                          <th mat-sort-header="name">Nom</th>
+                          <th mat-sort-header="nafTitle">Activité</th>
+                          <th mat-sort-header="contact">Contact</th>
+                          <th mat-sort-header="phone">Téléphone</th>
+
+                          <th mat-sort-header="status">Status</th>
+                          <th class="text-end"></th>
+                        </tr>
+                        @if (lstBoard.length === 0) {
+                        <tr>
+                          <td colspan="9">
+                            <h5 style="text-align: center">
+                              Aucune donnée trouvée
+                            </h5>
+                          </td>
+                        </tr>
+                        }
+                      </thead>
+                      <tbody>
+                        @for (company of lstBoard; track company; let i =
+                        $index) {
+                        <tr>
+                          <td>
+                            <div class="form-check custom-checkbox">
+                              <input
+                                type="checkbox"
+                                class="form-check-input"
+                                [value]="company?.id"
+                                [checked]="isSelected(company)"
+                                (change)="onCheckboxChange(company, $event)"
+                              />
+                            </div>
+                          </td>
+                          <td>
+                            <div
+                              class="cursor-pointer"
+                              [routerLink]="
+                                routes.get_admin_company(company.id)
+                              "
+                            >
+                              {{ getDate(company.createdAt) }}
+                            </div>
+                          </td>
+                          <td>
+                            <div class="cursor-pointer">
+                              {{ company?.name }}
+                            </div>
+                          </td>
+                          <td>
+                            <div class="cursor-pointer">
+                              {{ company?.nafTitle }}
+                            </div>
+                          </td>
+                          <td>
+                            <div class="cursor-pointer">
+                              {{ getContact(company) }}
+                            </div>
+                          </td>
+                          <td>
+                            <div class="cursor-pointer">
+                              {{ company.employees?.[0]?.phone ||'' }}
+                            </div>
+                          </td>
+                          <td>
+                            <div
+                              [ngClass]="{
+                                'text-success':
+                                  company.status?.name === 'Active',
+                                'text-danger': company.status?.name !== 'Active'
+                              }"
+                              [routerLink]="
+                                routes.get_admin_company(company.id)
+                              "
+                            >
+                              {{ company.status?.name }}
+                            </div>
+                          </td>
+                          <td class="text-end" data-bs-toggle="dropdown">
+                            <div class="hide-shave">
+                              <a
+                                href="javascript:void(0)"
+                                class="dropdown-toggle nav-link"
+                                data-bs-toggle="dropdown"
+                                ><i class="fas fa-ellipsis-v"></i
+                              ></a>
+                              <div class="dropdown-menu user-menu-list">
+                                <a
+                                  class="dropdown-item"
+                                  [routerLink]="
+                                    routes.get_admin_company(company.id)
+                                  "
+                                  data-dismiss="modal"
+                                  ><i class="feather icon-edit"></i> Editer</a
+                                >
+                                <a
+                                  class="dropdown-item"
+                                  href="javascript:void(0)"
+                                  (click)="
+                                    this.showDeleteCategoryModal(company)
+                                  "
+                                  data-dismiss="modal"
+                                  ><i
+                                    class="feather icon-trash text-danger"
+                                  ></i>
+                                  Supprimer</a
+                                >
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="table_footer">
+                  <div class="col-sm-12 col-md-5"></div>
+
+                  <div class="col-sm-12 col-md-7">
+                    <div class="pagination_section">
+                      <ul class="pagination">
+                        <li
+                          class="page-item"
+                          [ngClass]="{
+                            disabled: currentPage === 1
+                          }"
+                        >
+                          <a
+                            (click)="getMoreData('previous')"
+                            (keydown.enter)="getMoreData('previous')"
+                            class="page-link"
+                            href="javascript:void(0);"
+                            tabindex="-1"
+                            >Previous</a
+                          >
+                        </li>
+
+                        @for (item of pageNumberArray; track item; let i =
+                        $index) {
+                        <li
+                          class="page-item"
+                          [class.active]="item === currentPage"
+                          [ngClass]="
+                            (pageNumberArray[currentPage - 2] > item &&
+                              item !== 1 &&
+                              pageNumberArray.length > 6) ||
+                            (pageNumberArray[currentPage] < item &&
+                              item !== 1 &&
+                              pageNumberArray.length > 6 &&
+                              pageNumberArray.length !== item)
+                              ? 'hide-page-no'
+                              : 'show-page-no'
+                          "
+                        >
+                          <a
+                            (click)="moveToPage(item)"
+                            (keydown.enter)="moveToPage(item)"
+                            class="page-link"
+                            href="javascript:void(0);"
+                          >
+                            {{ item }}
+                          </a>
+                        </li>
+                        @if ( i === 0 && pageNumberArray.length > 6 &&
+                        currentPage > 2 ) {
+                        <li
+                          class="page-item"
+                          [hidden]="currentPage === 1"
+                          (click)="moveToPage(currentPage - 2)"
+                          (keydown.enter)="moveToPage(currentPage - 2)"
+                          tabindex="0"
+                        >
+                          <a class="page-link" href="javascript:void(0);">
+                            ...
+                          </a>
+                        </li>
+                        } @if ( i === pageNumberArray.length - 2 &&
+                        pageNumberArray.length > 6 ) {
+                        <li
+                          [hidden]="
+                            currentPage >=
+                              pageNumberArray[pageNumberArray.length - 2] ||
+                            totalData <
+                              serialNumberArray[serialNumberArray.length - 1]
+                          "
+                          class="page-item"
+                          (click)="moveToPage(currentPage + 2)"
+                          (keydown.enter)="moveToPage(currentPage + 2)"
+                          tabindex="0"
+                        >
+                          <a class="page-link" href="javascript:void(0);">
+                            ...
+                          </a>
+                        </li>
+                        } }
+
+                        <li
+                          class="page-item"
+                          [ngClass]="{
+                            disabled:
+                              currentPage ===
+                                pageNumberArray[pageNumberArray.length - 1] ||
+                              lstBoard.length === 0
+                          }"
+                        >
+                          <a
+                            (click)="getMoreData('next')"
+                            (keydown.enter)="getMoreData('next')"
+                            class="page-link"
+                            href="javascript:void(0);"
+                            >Next
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /Page Wrapper -->
+      </div>
+
+      <!-- Delete Modal -->
+      <div class="modal custom-modal fade" id="delete_client" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="form-header">
+                <h3>Supprimer</h3>
+                <p>Êtes-vous sur de vouloir supprimer</p>
+                <p>
+                  <strong class="text-danger"
+                    >{{ companyToDelete?.name }} ?</strong
+                  >
+                </p>
+              </div>
+              <div class="modal-btn delete-action">
+                <div class="row">
+                  <div class="col-6">
+                    <a
+                      href="javascript:void(0);"
+                      class="btn btn-primary continue-btn"
+                      (click)="deleteCompany(companyToDelete)"
+                      >Supprimer</a
+                    >
+                  </div>
+                  <div class="col-6">
+                    <a
+                      href="javascript:void(0);"
+                      data-bs-dismiss="modal"
+                      class="btn btn-primary cancel-btn"
+                      >Annuler</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /Delete Modal -->
+    </div>
+  </div>
+
+  <!-- Add Modal -->
+  <div class="modal fade custom-modal" id="add-company">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header flex-wrap">
+          <div class="text-center w-100 mb-3">
+            <img src="assets/img/interim.png" alt="" />
+          </div>
+          <h4 class="modal-title">Ajouter un Client</h4>
+          <button type="button" class="close" data-bs-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <form [formGroup]="addClientForm" (ngSubmit)="onClienSubmit()">
+            <div formGroupName="company">
+              <div class="company-title">
+                <h4>Informations Générales</h4>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="input-block">
+                    <label for="company-name" class="form-label">Siret</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="siret"
+                      (change)="getSiretDetails($event)"
+                      placeholder="Saisir votre siret"
+                    />
+                    <small class="text-danger" *ngIf="siretErrorMessage">
+                      {{ siretErrorMessage }}
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="input-block">
+                    <label for="company-name" class="form-label"
+                      >Nom de l'entreprise</label
+                    >
+                    <input
+                      id="company-name"
+                      type="text"
+                      class="form-control disabled"
+                      formControlName="name"
+                      readonly
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="input-block">
+                    <label for="naf-title" class="form-label">Activité</label>
+                    <input
+                      type="text"
+                      id="naf-title"
+                      class="form-control disabled"
+                      formControlName="nafTitle"
+                      readonly
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="input-block">
+                    <label for="naf-code" class="form-label">NAF</label>
+                    <input
+                      id="naf-code"
+                      type="text"
+                      class="form-control disabled"
+                      formControlName="naf"
+                      readonly
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="input-block">
+                    <label for="tagline" class="form-label"
+                      >Forme juridique</label
+                    >
+                    <input
+                      id="tagline"
+                      type="text"
+                      class="form-control disabled"
+                      formControlName="category"
+                      readonly
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="input-block">
+                    <label for="team-size" class="form-label"
+                      >Taille de l'entreprise</label
+                    >
+                    <input
+                      id="team-size"
+                      type="text"
+                      class="form-control disabled"
+                      formControlName="workforce"
+                      readonly
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="row"
+                formGroupName="location"
+                [class.disabled]="siretErrorMessage"
+              >
+                <div class="col-md-12">
+                  <h4>Localisation</h4>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="input-block">
+                    <label for="post-code" class="form-label"
+                      >Code Postal</label
+                    >
+                    <input
+                      id="post-code"
+                      type="text"
+                      class="form-control"
+                      formControlName="postalCode"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="input-block">
+                    <label for="city" class="form-label">Ville</label>
+                    <input
+                      id="city"
+                      type="text"
+                      class="form-control"
+                      formControlName="city"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="input-block">
+                    <label for="state" class="form-label">Département</label>
+                    <input
+                      id="state"
+                      type="text"
+                      class="form-control"
+                      formControlName="department"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="input-block">
+                    <label for="region" class="form-label">Région</label>
+                    <input
+                      id="region"
+                      type="text"
+                      class="form-control"
+                      formControlName="region"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="input-block">
+                    <label for="address" class="form-label">Adresse</label>
+                    <input
+                      id="address"
+                      type="text"
+                      class="form-control"
+                      formControlName="address"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="input-block">
+                    <label for="address2" class="form-label"
+                      >Adresse Complémentaire</label
+                    >
+                    <input
+                      id="address2"
+                      type="text"
+                      class="form-control"
+                      formControlName="addressLine2"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr />
+            <div formGroupName="user" [class.disabled]="siretErrorMessage">
+              <div class="company-title">
+                <h4>Contact</h4>
+              </div>
+              <div class="row">
+                <div class="input-block">
+                  <label for="firstName"
+                    >Prénom <span class="label-star"> *</span></label
+                  >
+                  <input
+                    id="firstName"
+                    type="text"
+                    formControlName="firstName"
+                    class="form-control"
+                  />
+                </div>
+
+                <div class="input-block">
+                  <label for="lastName"
+                    >Nom <span class="label-star"> *</span></label
+                  >
+                  <input
+                    id="lastName"
+                    type="text"
+                    formControlName="lastName"
+                    class="form-control"
+                  />
+                </div>
+
+                <div class="input-block">
+                  <label for="phone"
+                    >Numéro de Téléphone
+                    <span class="label-star"> *</span></label
+                  >
+                  <input
+                    id="phone"
+                    type="text"
+                    formControlName="phone"
+                    class="form-control"
+                    required
+                    [ngClass]="{
+                      'is-invalid':
+                        addClientForm.get('user.phone')?.invalid &&
+                        addClientForm.get('user.phone')?.touched
+                    }"
+                  />
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="
+                      addClientForm.get('user.phone')?.invalid &&
+                      addClientForm.get('user.phone')?.touched
+                    "
+                  >
+                    <div
+                      *ngIf="addClientForm.get('user.phone')?.errors?.['required']"
+                    >
+                      Le champ Téléphone est obligatoire.
+                    </div>
+                    <div
+                      *ngIf="addClientForm.get('user.phone')?.errors?.['pattern']"
+                    >
+                      Veuillez entrer un numéro de téléphone valide.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="input-block">
+                  <label for="email"
+                    >Adresse Email <span class="label-star"> *</span></label
+                  >
+                  <input
+                    id="email"
+                    type="email"
+                    formControlName="email"
+                    class="form-control"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+            <hr />
+            <button
+              type="submit"
+              class="btn btn-primary w-100"
+              [disabled]="!addClientForm.valid || siretErrorMessage"
+            >
+              Ajouter
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add Modal -->
+</div>

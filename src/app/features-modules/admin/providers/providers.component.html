@@ -1,0 +1,1159 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+  <div class="content container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="row align-items-center">
+        <div class="col">
+          <h3 class="page-title">Projets</h3>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a [routerLink]="'/home'">Accueil</a>
+            </li>
+            <li class="breadcrumb-item active">Projets</li>
+          </ul>
+        </div>
+        <div class="col-auto">
+          <ng-container>
+            <a
+              class="btn add-user"
+              href="javascript:void(0)"
+              data-bs-toggle="modal"
+              data-bs-target="#add-offer"
+            >
+              <i class="fas fa-plus"></i> Créer une offre
+            </a>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <!-- Active User Header -->
+    <div class="page-header user-active">
+      <div class="row align-items-center">
+        <div class="col">
+          <h3 class="page-title">{{ selectedHederTitle }}</h3>
+          <p>
+            Total <span> {{ counter }} </span> projets
+          </p>
+        </div>
+        <div class="col-auto">
+          <a
+            href="javascript:"
+            class="btn export-btn me-1"
+            (click)="exportDataToCsv()"
+          >
+            <img src="assets/admin/img/export.svg" alt="" /> Exporter
+          </a>
+          <a
+            class="btn fil filter-btn"
+            href="javascript:void(0);"
+            id="filter_search"
+            (click)="openFilter()"
+            (keydown.enter)="openFilter()"
+          >
+            <i class="fas fa-filter"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- /Active User Header -->
+
+    <!-- Search Filter -->
+    <div class="card filter-card" [class.filter-show]="filter">
+      <div class="card-body pb-0">
+        <form [formGroup]="filterForm" (ngSubmit)="onFilterSubmit()">
+          <div class="row filter-row">
+            <div class="col-sm-6 col-md-3">
+              <div class="form-group">
+                <label for="from-date">Titre</label>
+                <input
+                  formControlName="title"
+                  class="form-control"
+                  type="text"
+                  (change)="onChange()"
+                />
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <div class="form-group">
+                <label for="company-name">Nom Entreprise</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  formControlName="companyName"
+                  (change)="onChange()"
+                />
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3">
+              <div class="form-group">
+                <label for="to-date">Type Contrat</label>
+                <input
+                  formControlName="contractType"
+                  class="form-control"
+                  type="text"
+                  (change)="onChange()"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row filter-row">
+            <div class="col-sm-6 col-md-3">
+              <div class="form-group">
+                <label for="city">Ville</label>
+                <input
+                  formControlName="city"
+                  class="form-control"
+                  type="text"
+                  matInput
+                  [matAutocomplete]="auto"
+                />
+                <mat-autocomplete
+                  #auto="matAutocomplete"
+                  [displayWith]="displayFn"
+                >
+                  @for (city of filteredCityOptions | async; track city) {
+                  <mat-option [value]="city.name">{{ city.name }}</mat-option>
+                  }
+                </mat-autocomplete>
+              </div>
+            </div>
+            <!-- Department -->
+            <div class="col-sm-6 col-md-3">
+              <div class="form-group">
+                <label for="department">Département</label>
+                <input
+                  formControlName="department"
+                  class="form-control"
+                  type="text"
+                  matInput
+                  [matAutocomplete]="deptAuto"
+                />
+                <mat-autocomplete
+                  #deptAuto="matAutocomplete"
+                  [displayWith]="displayFn"
+                >
+                  @for (department of filteredDepartmentOptions | async; track
+                  department) {
+                  <mat-option [value]="department.name">{{
+                    department.name
+                  }}</mat-option>
+                  }
+                </mat-autocomplete>
+              </div>
+            </div>
+            <!-- Region -->
+            <div class="col-sm-6 col-md-3">
+              <div class="form-group">
+                <label for="region">Région</label>
+                <input
+                  formControlName="region"
+                  class="form-control"
+                  type="text"
+                  matInput
+                  [matAutocomplete]="regionAuto"
+                />
+                <mat-autocomplete
+                  #regionAuto="matAutocomplete"
+                  [displayWith]="displayFn"
+                >
+                  @for (region of filteredRegionOptions | async; track region) {
+                  <mat-option [value]="region.name">{{
+                    region.name
+                  }}</mat-option>
+                  }
+                </mat-autocomplete>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+              <div class="form-group">
+                <button
+                  class="btn btn-primary w-100 btn-lg login-btn d-flex align-items-center justify-content-center"
+                  type="submit"
+                >
+                  Rechercher
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /Search Filter -->
+
+    <!-- /Page Header -->
+
+    <div class="card bg-white projects-card">
+      <div class="card-body pt-0">
+        <div class="tab-content pt-0">
+          <div class="col-12 m-3">
+            <ul class="row">
+              <!-- Add 'row' class here -->
+              <li
+                class="col-3 text-center p-1 p-1"
+                (click)="filterOffersByStatus(null)"
+                [ngClass]="{ selected: selectedStatus === null }"
+              >
+                Tous ({{ offersCounter }})
+              </li>
+              <li
+                class="col-3 text-center p-1"
+                (click)="filterOffersByStatus('Published')"
+                [ngClass]="{ selected: selectedStatus === 'Published' }"
+              >
+                Actif ({{ activeOffersCounter }})
+              </li>
+              <li
+                class="col-3 text-center p-1"
+                (click)="filterOffersByStatus('Closed')"
+                [ngClass]="{ selected: selectedStatus === 'Closed' }"
+              >
+                Inactif ({{ inactiveOffersCounter }})
+              </li>
+              <li
+                class="col-3 text-center p-1"
+                (click)="filterOffersByStatus('Draft')"
+                [ngClass]="{ selected: selectedStatus === 'Draft' }"
+              >
+                Brouillon ({{ draftOffersCounter }})
+              </li>
+            </ul>
+          </div>
+
+          <!-- <div role="tabpanel" id="tab-4" class="tab-pane fade active show"> -->
+          <div class="table-responsive overflow-auto rounded-lg shadow">
+            <div class="table-scroll">
+              <mat-form-field class="filter">
+                <input
+                  matInput
+                  (keyup)="searchData($event.target)"
+                  placeholder="Recherche"
+                  class="form-control form-control-sm search"
+                />
+              </mat-form-field>
+              <mat-table
+                [dataSource]="dataSource"
+                matSort
+                class="mat-elevation-z8"
+              >
+                <ng-container matColumnDef="title">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Titre
+                  </mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let element"
+                    [routerLink]="routes.get_admin_offer(element.id)"
+                  >
+                    {{ element.title }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="createdAt">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Date de création
+                  </mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let element"
+                    [routerLink]="routes.get_admin_offer(element.id)"
+                  >
+                    {{ getDate(element.createdAt) }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="companyName">
+                  <mat-header-cell *matHeaderCellDef>
+                    Nom Entreprise
+                  </mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let element"
+                    [routerLink]="routes.get_admin_offer(element.id)"
+                  >
+                    {{ element?.company?.name }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="ContactType">
+                  <mat-header-cell *matHeaderCellDef>
+                    Type Contrat
+                  </mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let element"
+                    [routerLink]="routes.get_admin_offer(element.id)"
+                  >
+                    {{ element?.contractType?.description }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="city">
+                  <mat-header-cell *matHeaderCellDef> Ville </mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let element"
+                    [routerLink]="routes.get_admin_offer(element.id)"
+                  >
+                    {{ element?.city?.name }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="seniority">
+                  <mat-header-cell *matHeaderCellDef>
+                    Séniorité
+                  </mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let element"
+                    [routerLink]="routes.get_admin_offer(element.id)"
+                  >
+                    {{ element?.seniority || "< 1 ans" }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="startDate">
+                  <mat-header-cell mat-sort-header *matHeaderCellDef>
+                    Date Début
+                  </mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let element"
+                    [routerLink]="routes.get_admin_offer(element.id)"
+                  >
+                    {{ getDate(element.startDate) }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="endDate">
+                  <mat-header-cell mat-sort-header *matHeaderCellDef>
+                    Date Fin
+                  </mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let element"
+                    [routerLink]="routes.get_admin_offer(element.id)"
+                  >
+                    {{ getDate(element.endDate) }}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                  <mat-header-cell
+                    *matHeaderCellDef
+                    style="flex: none"
+                  ></mat-header-cell>
+                  <mat-cell
+                    *matCellDef="let element"
+                    style="flex: none"
+                    data-bs-toggle="dropdown"
+                    ><div class="hide-shave">
+                      <a
+                        href="javascript:void(0)"
+                        class="dropdown-toggle nav-link"
+                        ><i class="fas fa-ellipsis-v"></i
+                      ></a>
+                      <div class="dropdown-menu user-menu-list">
+                        <a
+                          class="dropdown-item"
+                          data-dismiss="modal"
+                          [routerLink]="routes.get_admin_offer(element.id)"
+                          ><i class="feather icon-edit"></i> Editer</a
+                        >
+                        <a
+                          class="dropdown-item"
+                          href="javascript:void(0)"
+                          (click)="this.showDeleteOfferModal(element)"
+                          data-dismiss="modal"
+                          ><i class="feather icon-trash text-danger"></i>
+                          Supprimer</a
+                        >
+                      </div>
+                    </div></mat-cell
+                  ></ng-container
+                >
+                <mat-header-row
+                  *matHeaderRowDef="displayedColumns"
+                ></mat-header-row>
+                <mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                ></mat-row>
+              </mat-table>
+              <mat-paginator
+                [pageSizeOptions]="[10, 25, 50, 75, 100]"
+                showFirstLastButtons
+                class="d-flex justify-content-center align-items-center"
+                style="font-weight: bold; font-size: 14px"
+              ></mat-paginator>
+            </div>
+          </div>
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /Page Wrapper -->
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade custom-modal" id="add-offer">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header flex-wrap">
+        <div class="text-center w-100 mb-3">
+          <img src="assets/img/interim.png" alt="logo" />
+        </div>
+        <h4 class="modal-title">Créer une offre</h4>
+        <button type="button" class="close" data-bs-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="addOfferForm" (ngSubmit)="onSubmit()">
+          <div>
+            <div class="company-title">
+              <h4>Généralités</h4>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="input-block">
+                  <label for="comp" class="form-label">Entreprise</label>
+                  <input
+                    id="comp"
+                    formControlName="company"
+                    class="form-control"
+                    type="text"
+                    placeholder="Saisir une nom d'entreprise"
+                    (input)="filterCompanies($event.target)"
+                    [attr.autocomplete]="'off'"
+                    [ngClass]="{
+                      'is-invalid':
+                        company?.invalid && (company?.touched || company?.dirty)
+                    }"
+                  />
+                  <!-- Autocomplete suggestions -->
+                  <ul
+                    class="autocomplete-list"
+                    *ngIf="filteredCompanies.length"
+                  >
+                    <li
+                      *ngFor="let company of filteredCompanies"
+                      (click)="selectCompany(company)"
+                      class="autocomplete-item"
+                    >
+                      {{ company.name }}
+                    </li>
+                  </ul>
+                  <!-- Message d'erreur -->
+                  <div
+                    *ngIf="company?.touched && company?.invalid"
+                    class="text-danger"
+                  >
+                    <div *ngIf="company?.errors?.['required']">
+                      L'entreprise est obligatoire.
+                    </div>
+                    <div *ngIf="company?.errors?.['companyNotExist']">
+                      Cette entreprise n'est pas encore inscrite sur la
+                      plateforme.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="input-block">
+                  <label for="offer-title" class="form-label"
+                    >Titre du poste recherché</label
+                  >
+                  <input
+                    id="offer-title"
+                    formControlName="title"
+                    class="form-control"
+                    type="text"
+                    placeholder="Exemple : Développeur Full Stack"
+                    [ngClass]="{
+                      'is-invalid':
+                        title?.invalid && (title?.touched || title?.dirty)
+                    }"
+                  />
+                  <!-- Message d'erreur -->
+                  <div
+                    *ngIf="title?.touched && title?.invalid"
+                    class="text-danger"
+                  >
+                    <div *ngIf="title?.errors?.['required']">
+                      Le titre du poste est obligatoire.
+                    </div>
+                    <div *ngIf="title?.errors?.['minlength']">
+                      Le titre du poste doit contenir au moins 5 caractères.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="input-block">
+                  <label for="job" class="form-label">Métier</label>
+                  <input
+                    id="job"
+                    formControlName="job"
+                    class="form-control"
+                    type="text"
+                    placeholder="Saisir un métier"
+                    (input)="filterJobs($event.target)"
+                    (keydown.enter)="addJob()"
+                    [attr.autocomplete]="'off'"
+                    [ngClass]="{
+                      'is-invalid': job?.invalid && (job?.touched || job?.dirty)
+                    }"
+                  />
+                  <!-- Autocomplete suggestions -->
+                  <ul class="autocomplete-list" *ngIf="filteredJobs.length">
+                    <li
+                      *ngFor="let job of filteredJobs"
+                      (click)="selectJob(job)"
+                      class="autocomplete-item"
+                    >
+                      {{ job.name }}
+                    </li>
+                  </ul>
+                  <!-- Message d'erreur -->
+                  <div *ngIf="job?.touched && job?.invalid" class="text-danger">
+                    <div *ngIf="job?.errors?.['required']">
+                      Le Métier est obligatoire.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="input-block">
+                  <label for="naf-code" class="form-label">Sous Activité</label>
+                  <select
+                    id="subActivity"
+                    formControlName="subActivity"
+                    class="form-select"
+                    (change)="onSubActivityChange($event)"
+                    [ngClass]="{
+                      'is-invalid':
+                        subActivity?.invalid &&
+                        (subActivity?.touched || subActivity?.dirty)
+                    }"
+                    *ngIf="jobNotExist"
+                  >
+                    <option value="" disabled selected>
+                      Selectionner une Sous Activité
+                    </option>
+                    <option
+                      *ngFor="let subActivity of subActivities"
+                      [value]="subActivity.name"
+                    >
+                      {{ subActivity?.name }}
+                    </option>
+                  </select>
+                  <!-- show this if Job already in the database -->
+                  <input
+                    formControlName="subActivity"
+                    type="text"
+                    class="form-control"
+                    placeholder="Sous Activité"
+                    *ngIf="!jobNotExist"
+                    readonly
+                  />
+                  <!-- Message d'erreur -->
+                  <div
+                    *ngIf="subActivity?.touched && subActivity?.invalid"
+                    class="text-danger"
+                  >
+                    <div *ngIf="subActivity?.errors?.['required']">
+                      Sous Activité est obligatoire.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="input-block">
+                  <label for="tagline" class="form-label">Activité</label>
+                  <input
+                    formControlName="activity"
+                    type="text"
+                    class="form-control"
+                    placeholder="Activité"
+                    readonly
+                    [ngClass]="{
+                      'is-invalid':
+                        activity?.invalid &&
+                        (activity?.touched || activity?.dirty)
+                    }"
+                  />
+                  <!-- Message d'erreur -->
+                  <div
+                    *ngIf="activity?.touched && activity?.invalid"
+                    class="text-danger"
+                  >
+                    <div *ngIf="activity?.errors?.['required']">
+                      Activité est obligatoire.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+          <div>
+            <div class="company-title">
+              <h4>Localisation</h4>
+            </div>
+            <div class="row">
+              <div class="input-block">
+                <label for="city" class="focus-label">Ville</label>
+                <input
+                  id="city"
+                  formControlName="city"
+                  class="form-control"
+                  type="text"
+                  placeholder="Saisir une ville"
+                  [attr.autocomplete]="'off'"
+                  [ngClass]="{
+                    'is-invalid':
+                      city?.invalid && (city?.touched || city?.dirty)
+                  }"
+                />
+                <!-- Autocomplete suggestions -->
+                <ul class="autocomplete-list" *ngIf="filteredCities.length">
+                  <li
+                    *ngFor="let city of filteredCities"
+                    (click)="selectCity(city)"
+                    class="autocomplete-item"
+                  >
+                    {{ city.name }}
+                  </li>
+                </ul>
+                <!-- Message d'erreur -->
+                <div *ngIf="city?.touched && city?.invalid" class="text-danger">
+                  <div *ngIf="city?.errors?.['required']">
+                    Ville est obligatoire.
+                  </div>
+                </div>
+              </div>
+
+              <div class="input-block">
+                <label for="department" class="focus-label">Département</label>
+                <input
+                  id="department"
+                  type="text"
+                  class="form-control"
+                  formControlName="department"
+                  readonly
+                  [ngClass]="{
+                    'is-invalid':
+                      department?.invalid &&
+                      (department?.touched || department?.dirty)
+                  }"
+                />
+                <!-- Message d'erreur -->
+                <div
+                  *ngIf="department?.touched && department?.invalid"
+                  class="text-danger"
+                >
+                  <div *ngIf="department?.errors?.['required']">
+                    Département est obligatoire.
+                  </div>
+                </div>
+              </div>
+
+              <div class="input-block">
+                <label for="region" class="focus-label">Région</label>
+                <input
+                  id="region"
+                  type="text"
+                  class="form-control"
+                  formControlName="region"
+                  readonly
+                  [ngClass]="{
+                    'is-invalid':
+                      region?.invalid && (region?.touched || region?.dirty)
+                  }"
+                />
+                <!-- Message d'erreur -->
+                <div
+                  *ngIf="region?.touched && region?.invalid"
+                  class="text-danger"
+                >
+                  <div *ngIf="region?.errors?.['required']">
+                    Région est obligatoire.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div>
+            <div>
+              <h4>Détails</h4>
+            </div>
+            <label for="contractType" class="focus-label"
+              >Type de contrat</label
+            >
+            <select
+              formControlName="contractType"
+              class="form-select"
+              (change)="onContractTypeChange($event)"
+              [ngClass]="{
+                'is-invalid':
+                  contractType?.invalid &&
+                  (contractType?.touched || contractType?.dirty)
+              }"
+            >
+              <option value="" disabled selected>
+                Selectionner un type de contrat
+              </option>
+              <option *ngFor="let type of contractTypes" [value]="type.id">
+                {{ type?.description }}
+              </option>
+            </select>
+
+            <!-- Message d'erreur -->
+            <div
+              *ngIf="contractType?.touched && contractType?.invalid"
+              class="text-danger"
+            >
+              <div *ngIf="contractType?.errors?.['required']">
+                Type de contrat est obligatoire.
+              </div>
+            </div>
+
+            <label for="seniority" class="focus-label">Séniorité</label>
+            <select
+              id="seniority"
+              class="form-control form-select"
+              formControlName="seniority"
+              [ngClass]="{
+                'is-invalid': seniority?.touched && seniority?.invalid
+              }"
+            >
+              <option value="" disabled selected>
+                Veuillez sélectionner la séniorité...
+              </option>
+              <option value="< 1 ans">< 1 ans</option>
+              <option value="de 1 à 5 ans">de 1 à 5 ans</option>
+              <option value="de 5 à 10 ans">de 5 à 10 ans</option>
+              <option value="> 10 ans">> 10 ans</option>
+            </select>
+            <!-- Message d'erreur -->
+            <div
+              *ngIf="seniority?.touched && seniority?.invalid"
+              class="text-danger"
+            >
+              <div *ngIf="seniority?.errors?.['required']">
+                La séniorité est obligatoire.
+              </div>
+            </div>
+
+            <label for="startDate" class="focus-label"
+              >Date de début prévue</label
+            >
+            <input
+              id="startDate"
+              formControlName="startDate"
+              class="form-control"
+              type="date"
+              placeholder="Choisissez une date"
+              [min]="minDate"
+              [ngClass]="{
+                'is-invalid':
+                  startDate?.invalid && (startDate?.touched || startDate?.dirty)
+              }"
+            />
+            <!-- Message d'erreur -->
+            <div
+              *ngIf="startDate?.touched && startDate?.invalid"
+              class="text-danger"
+            >
+              <div *ngIf="startDate?.errors?.['required']">
+                - Date de début prévue est obligatoire.
+              </div>
+              <div *ngIf="startDate?.errors?.['minDate']">
+                - La date ne peut pas être dans le passé.
+              </div>
+            </div>
+
+            <div *ngIf="!isCdiSelected">
+              <label for="startDate" class="focus-label">Date de fin</label>
+              <input
+                id="endDate"
+                formControlName="endDate"
+                class="form-control"
+                type="date"
+                [min]="minDate"
+                [ngClass]="{
+                  'is-invalid':
+                    endDate?.invalid && (endDate?.touched || endDate?.dirty)
+                }"
+              />
+              <!-- Message d'erreur -->
+              <div
+                *ngIf="endDate?.touched && endDate?.invalid"
+                class="text-danger"
+              >
+                <div *ngIf="endDate?.errors?.['required']">
+                  - Date de fin est obligatoire.
+                </div>
+                <div *ngIf="endDate?.errors?.['minDate']">
+                  - La date ne peut pas être dans le passé.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!isCdiSelected">
+            <div>
+              <label for="duration" class="focus-label">Durée prévue</label>
+
+              <input
+                id="duration"
+                formControlName="duration"
+                class="form-control"
+                type="number"
+                placeholder="Entrez un nombre (ex:3)"
+                [ngClass]="{
+                  'is-invalid':
+                    duration?.invalid && (duration?.touched || duration?.dirty)
+                }"
+              />
+              <!-- Message d'erreur -->
+              <div
+                *ngIf="duration?.touched && duration?.invalid"
+                class="text-danger"
+              >
+                <div *ngIf="duration?.errors?.['required']">
+                  Durée prévue est obligatoire.
+                </div>
+                <div *ngIf="duration?.errors?.['min']">
+                  La durée doit être supérieure à 0.
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label for="timeUnit" class="focus-label">Unité de temps</label>
+              <select
+                id="timeUnit"
+                formControlName="timeUnit"
+                class="form-control form-select"
+                [ngClass]="{
+                  'is-invalid':
+                    timeUnit?.invalid && (timeUnit?.touched || timeUnit?.dirty)
+                }"
+              >
+                <option value="" disabled selected>
+                  Selectionner un unité(Semaine,Mois,Année)
+                </option>
+                <option value="Semaine">Semaine</option>
+                <option value="Mois">Mois</option>
+                <option value="Année">Année</option>
+              </select>
+              <!-- Message d'erreur -->
+              <div
+                *ngIf="timeUnit?.touched && timeUnit?.invalid"
+                class="text-danger"
+              >
+                <div *ngIf="timeUnit?.errors?.['required']">
+                  Unité de temps est obligatoire.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+          <div>
+            <div>
+              <h4>Compétences</h4>
+            </div>
+            <div class="form-group">
+              <label for="skills" class="focus-label"
+                >Compétences requises</label
+              >
+              <!-- Selected Skills as Chips -->
+              <div
+                class="selected-skills"
+                [ngClass]="{
+                  'is-invalid': selectedSkills.length < 1 && skills?.touched
+                }"
+              >
+                <span *ngFor="let skill of selectedSkills" class="skill-chip">
+                  {{ skill.name }}
+                  <button
+                    type="button"
+                    (click)="removeSkill(skill)"
+                    class="remove-btn"
+                  >
+                    x
+                  </button>
+                </span>
+                <!-- Input Field -->
+                <input
+                  id="skills"
+                  formControlName="skills"
+                  type="text"
+                  class="border-0"
+                  (input)="filterSkills($event.target)"
+                  (keydown.enter)="addSkill($event)"
+                  placeholder="Ajoutez des compétences"
+                  autocomplete="off"
+                />
+              </div>
+              <!-- Autocomplete Suggestions -->
+              <ul class="autocomplete-list" *ngIf="filteredSkills.length">
+                <li
+                  *ngFor="let skill of filteredSkills"
+                  (click)="selectSkill(skill)"
+                  class="autocomplete-item"
+                >
+                  {{ skill.name }}
+                </li>
+              </ul>
+              <!-- Message d'erreur -->
+              <div
+                *ngIf="selectedSkills.length < 1 && skills?.touched"
+                class="text-danger"
+              >
+                <div>Les compétences sont obligatoires.</div>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+          <div>
+            <div>
+              <h4>Conditions</h4>
+            </div>
+            <!-- Salaire Input -->
+            <div>
+              <div class="input-block">
+                <label for="salaire" class="form-label">Salaire</label>
+                <input
+                  id="salaire"
+                  formControlName="salary"
+                  type="number"
+                  class="form-control"
+                />
+
+                <div
+                  *ngIf="salary?.touched && salary?.invalid"
+                  class="text-danger"
+                >
+                  <div *ngIf="salary?.errors?.['min']">
+                    La Salaire doit être supérieure à 0.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Type Select -->
+            <div>
+              <div class="input-block">
+                <label for="typologie" class="focus-label">type</label>
+                <select
+                  id="typologie"
+                  formControlName="typologie"
+                  class="form-select"
+                >
+                  <option value="" disabled selected>
+                    Sélectionner une typologie
+                  </option>
+                  <option
+                    *ngFor="let level of selectedSalaryTypeList"
+                    [value]="level.value"
+                  >
+                    {{ level.value }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+          <div formArrayName="languages">
+            <div>
+              <h4>Language</h4>
+            </div>
+
+            <div
+              class="col-md-12"
+              *ngFor="let language of languagesArray.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <div class="row align-items-center">
+                <!-- Language Input -->
+                <div class="col-md-6">
+                  <div class="input-block">
+                    <label for="language" class="form-label">Language</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Saisir une langue"
+                      [attr.autocomplete]="'off'"
+                      formControlName="name"
+                      (input)="filterLanguages($event.target, i)"
+                    />
+                    <!-- Autocomplete suggestions -->
+                    <ul
+                      class="autocomplete-list"
+                      *ngIf="filteredLanguages.length && activeIndex === i"
+                    >
+                      <li
+                        *ngFor="let language of filteredLanguages"
+                        (click)="selectLanguage(language, i)"
+                        class="autocomplete-item"
+                      >
+                        {{ language.name }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Level Select -->
+                <div class="col-md-6">
+                  <div class="input-block">
+                    <label for="level" class="focus-label">Niveau</label>
+                    <select
+                      formControlName="level"
+                      class="form-control form-select"
+                    >
+                      <option value="" disabled selected>
+                        Sélectionner un niveau
+                      </option>
+                      <option
+                        *ngFor="let level of selectedLanguageList"
+                        [value]="level.value"
+                      >
+                        {{ level.value }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Add/Remove Buttons -->
+              <div class="row mt-2">
+                <div class="col-md-12 text-end">
+                  <a
+                    *ngIf="i === languagesArray.length - 1"
+                    class="add-new me-2"
+                    (click)="addLanguage()"
+                    tabindex="0"
+                    style="color: #179ab5 !important"
+                  >
+                    <i class="feather icon-plus-circle me-1"></i> Ajouter
+                  </a>
+                  <a
+                    *ngIf="languagesArray.length > 1"
+                    class="remove_row text-danger"
+                    (click)="removeLanguage(i)"
+                  >
+                    Supprimer
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+          <div>
+            <div>
+              <h4>Description détaillée</h4>
+            </div>
+            <ngx-editor-menu
+              [ngClass]="{
+                'is-invalid':
+                  description?.invalid &&
+                  (description?.touched || description?.dirty)
+              }"
+              [editor]="editor"
+              [toolbar]="toolbar"
+            ></ngx-editor-menu>
+            <ngx-editor [editor]="editor" formControlName="description">
+            </ngx-editor>
+            <!-- Message d'erreur -->
+            <div
+              *ngIf="description?.touched && description?.invalid"
+              class="text-danger"
+            >
+              <div *ngIf="description?.errors?.['required']">
+                La description du poste est obligatoire.
+              </div>
+              <div *ngIf="description?.errors?.['minlength']">
+                La description du poste doit contenir au moins 200 caractères.
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div class="form-check custom-checkbox" class="h5">
+            <input
+              formControlName="publish"
+              type="checkbox"
+              class="form-check-input ms-2"
+              id="publish-ckeck"
+            />
+            <label class="form-check-label ms-2" for="publish-ckeck">
+              Activer directement l'offre</label
+            >
+          </div>
+          <hr />
+          <button
+            type="submit"
+            class="btn btn-primary w-100 btn-lg login-btn d-flex align-items-center justify-content-center"
+          >
+            Ajouter
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add Modal -->
+
+<!-- Delete Modal -->
+<div class="modal custom-modal fade" id="delete_offer" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-header">
+          <h3>Supprimer</h3>
+          <p *ngIf="offerToDelete?.status?.name !== 'Published'">
+            Êtes-vous sur de vouloir supprimer
+          </p>
+          <p *ngIf="offerToDelete?.status?.name === 'Published'">
+            Il n'est pas possible de supprimer une offre en cours.
+            Souhaitez-vous la désactiver ?
+          </p>
+          <p>
+            <strong class="text-danger">{{ offerToDelete?.title }} ?</strong>
+          </p>
+        </div>
+        <div class="modal-btn delete-action">
+          <div class="row">
+            <div class="col-6">
+              <a
+                *ngIf="offerToDelete?.status?.name !== 'Published'"
+                href="javascript:void(0);"
+                class="btn btn-primary continue-btn"
+                (click)="deleteOffer(offerToDelete)"
+                >Supprimer</a
+              >
+              <a
+                *ngIf="offerToDelete?.status?.name === 'Published'"
+                href="javascript:void(0);"
+                class="btn btn-primary continue-btn"
+                (click)="disableOffer(offerToDelete?.id)"
+                >Désactiver
+              </a>
+            </div>
+            <div class="col-6">
+              <a
+                href="javascript:void(0);"
+                data-bs-dismiss="modal"
+                class="btn btn-primary cancel-btn"
+                >Annuler</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Delete Modal -->

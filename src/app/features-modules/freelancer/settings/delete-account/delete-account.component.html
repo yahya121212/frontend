@@ -1,0 +1,50 @@
+<!-- Page Content -->
+<div class="dashboard-sec payout-section freelancer-statements">
+  <div class="page-title portfolio-title">
+    <h3 class="mb-0">Supprimer le compte</h3>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="input-block">
+        <label for="details" class="focus-label"
+          >Veuillez expliquer la raison
+          <span class="label-star"> *</span></label
+        >
+        <textarea class="form-control" rows="5"></textarea>
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <div class="input-block">
+        <label for="password" class="focus-label"
+          >Mot de passe <span class="label-star"> *</span></label
+        >
+        <div class="position-relative">
+          <input
+            [type]="password ? 'text' : 'password'"
+            class="form-control floating pass-input1"
+          />
+          <div
+            class="password-icon"
+            (click)="togglePassword()"
+            (keydown.enter)="togglePassword()"
+            tabindex="0"
+          >
+            <span
+              class="fas toggle-password1"
+              [ngClass]="password ? 'fa-eye' : 'fa-eye-slash'"
+            ></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12">
+      <div class="d-flex doc-btn">
+        <a href="javascript:void(0);" class="btn btn-gray">Annuler</a>
+        <a href="javascript:void(0);" class="btn btn-primary disabled" disabled
+          >Supprimer le compte</a
+        >
+      </div>
+    </div>
+  </div>
+</div>

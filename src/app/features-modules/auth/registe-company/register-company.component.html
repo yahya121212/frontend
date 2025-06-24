@@ -1,0 +1,523 @@
+<div class="main-wrapper account-page">
+  <div class="login-wrapper">
+    <div class="content w-100">
+      <!-- Login Content -->
+      <div class="account-content">
+        <div
+          *ngIf="siretErrorMessage"
+          class="alert alert-danger alert-dismissible fade show"
+          role="alert"
+        >
+          <strong> </strong>{{ siretErrorMessage }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="align-items-center justify-content-center">
+          <div class="login-right">
+            <div class="login-header text-center">
+              <a [routerLink]="routes.home"
+                ><img src="assets/img/interim.png" alt="logo" class="img-fluid"
+              /></a>
+              <h3> Bienvenue sur notre plateforme !  </h3>
+            </div>
+            <!-- <nav class="user-tabs mb-4" >
+              <ul role="tablist" class="nav nav-pills nav-justified">
+                <li class="nav-item">
+                  <a
+                    [routerLink]="routes.register"
+                    data-bs-toggle="tab"
+                    class="nav-link"
+                    >Candidat</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    [routerLink]="routes.registerCompany"
+                    data-bs-toggle="tab"
+                    class="nav-link active"
+                    >Entreprise</a
+                  >
+                </li>
+              </ul>
+            </nav> -->
+             <nav class="user-tabs mb-4">
+              <ul role="tablist" class="nav nav-pills nav-justified">
+                <li class="nav-item">
+                  <a
+                    [routerLink]="routes.registerCompany"
+                    data-bs-toggle="tab"
+                    class="nav-link active"
+                    >S'inscrire</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                   style="width:max-content"
+                    [routerLink]="routes.loginCompany"
+                    data-bs-toggle="tab"
+                    class="nav-link"
+                    >Se connecter</a
+                  >
+                </li>
+              </ul>
+            </nav>
+            <div class="tab-content pt-0">
+              <div
+                role="tabpanel active"
+                id="company"
+                class="tab-pane fade active show"
+              >
+                <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+                    <div *ngIf="loginError" class="alert alert-danger">
+                {{ loginError }}
+              </div>
+                  <div formGroupName="company">
+                    <div class="company-title">
+                      <h4>Informations Générales</h4>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="input-block">
+                          <label for="company-name" class="form-label"
+                            >Siret</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            formControlName="siret"
+                            (change)="getSiretDetails($event)"
+                            placeholder="Saisir votre siret"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row" [class.disabled]="siretErrorMessage">
+                      <div class="col-md-12">
+                        <div class="input-block">
+                          <label for="company-name" class="form-label"
+                            >Nom de l'entreprise</label
+                          >
+                          <input
+                            id="company-name"
+                            type="text"
+                            class="form-control"
+                            formControlName="name"
+                            readonly
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="input-block">
+                          <label for="naf-title" class="form-label"
+                            >Activité</label
+                          >
+                          <input
+                            type="text"
+                            id="naf-title"
+                            class="form-control"
+                            formControlName="nafTitle"
+                            readonly
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="input-block">
+                          <label for="naf-code" class="form-label">NAF</label>
+                          <input
+                            id="naf-code"
+                            type="text"
+                            class="form-control"
+                            formControlName="naf"
+                            readonly
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="input-block">
+                          <label for="tagline" class="form-label"
+                            >Forme juridique</label
+                          >
+                          <input
+                            id="tagline"
+                            type="text"
+                            class="form-control"
+                            formControlName="category"
+                            readonly
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="input-block">
+                          <label for="team-size" class="form-label"
+                            >Taille de l'entreprise</label
+                          >
+                          <input
+                            id="team-size"
+                            type="text"
+                            class="form-control"
+                            formControlName="workforce"
+                            readonly
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="row"
+                      formGroupName="location"
+                      [class.disabled]="siretErrorMessage"
+                    >
+                      <div class="col-md-12">
+                        <h4>Location</h4>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="input-block">
+                          <label for="post-code" class="form-label"
+                            >Code Postal</label
+                          >
+                          <input
+                            id="post-code"
+                            type="text"
+                            class="form-control"
+                            formControlName="postalCode"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="input-block">
+                          <label for="city" class="form-label">Ville</label>
+                          <input
+                            id="city"
+                            type="text"
+                            class="form-control"
+                            formControlName="city"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="input-block">
+                          <label for="state" class="form-label"
+                            >Département</label
+                          >
+                          <input
+                            id="state"
+                            type="text"
+                            class="form-control"
+                            formControlName="department"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="input-block">
+                          <label for="region" class="form-label">Région</label>
+                          <input
+                            id="region"
+                            type="text"
+                            class="form-control"
+                            formControlName="region"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="input-block">
+                          <label for="address" class="form-label"
+                            >Adresse</label
+                          >
+                          <input
+                            id="address"
+                            type="text"
+                            class="form-control"
+                            formControlName="address"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-md-12">
+                        <div class="input-block">
+                          <label for="address2" class="form-label"
+                            >Adresse Complémentaire</label
+                          >
+                          <input
+                            id="address2"
+                            type="text"
+                            class="form-control"
+                            formControlName="addressLine2"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <hr />
+                  <div
+                    formGroupName="user"
+                    [class.disabled]="siretErrorMessage"
+                  >
+                    <div class="company-title">
+                      <h4>Contact</h4>
+                    </div>
+                    <div class="row">
+                      <div class="input-block">
+                        <label for="firstName"
+                          >Prénom <span class="label-star"> *</span></label
+                        >
+                        <input
+                          id="firstName"
+                          type="text"
+                          formControlName="firstName"
+                          class="form-control"
+                        />
+                      </div>
+
+                      <div class="input-block">
+                        <label for="lastName"
+                          >Nom <span class="label-star"> *</span></label
+                        >
+                        <input
+                          id="lastName"
+                          type="text"
+                          formControlName="lastName"
+                          class="form-control"
+                        />
+                      </div>
+
+                      <div class="input-block">
+                        <label for="phone"
+                          >Numéro de Téléphone
+                          <span class="label-star"> *</span></label
+                        >
+                        <input
+                          id="phone"
+                          type="text"
+                          formControlName="phone"
+                          class="form-control"
+                          required
+                          [ngClass]="{
+                            'is-invalid':
+                              signupForm.get('user.phone')?.invalid &&
+                              signupForm.get('user.phone')?.touched
+                          }"
+                        />
+                        <div
+                          class="invalid-feedback"
+                          *ngIf="
+                            signupForm.get('user.phone')?.invalid &&
+                            signupForm.get('user.phone')?.touched
+                          "
+                        >
+                          <span
+                            *ngIf="signupForm.get('user.phone')?.errors?.['required']"
+                          >
+                            {{ "errors.required" | translate }}
+                          </span>
+                          <span
+                            *ngIf="signupForm.get('user.phone')?.errors?.['pattern']"
+                          >
+                            {{ "errors.invalidPhoneNumber" | translate }}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="input-block">
+                        <label for="email"
+                          >Adresse Email
+                          <span class="label-star"> *</span></label
+                        >
+                        <input
+                          id="email"
+                          type="email"
+                          formControlName="email"
+                          class="form-control"
+                          required
+                        />
+                      </div>
+
+                      <div class="input-block">
+                        <label for="password"
+                          >Mot de passe
+                          <span class="label-star"> *</span></label
+                        >
+                        <div class="position-relative">
+                          <input
+                            id="password"
+                            [type]="password[0] ? 'text' : 'password'"
+                            formControlName="password"
+                            class="form-control"
+                          />
+                          <div
+                            class="password-icon"
+                            (click)="togglePassword(0)"
+                          >
+                            <span
+                              class="fas"
+                              [ngClass]="
+                                password[0] ? 'fa-eye' : 'fa-eye-slash'
+                              "
+                            ></span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="input-block">
+                        <label for="confirmPassword"
+                          >Confirmer mot de passe<span class="label-star">
+                            *</span
+                          ></label
+                        >
+                        <div class="position-relative">
+                          <input
+                            id="confirmPassword"
+                            [type]="password[1] ? 'text' : 'password'"
+                            formControlName="confirmPassword"
+                            class="form-control"
+                          />
+                          <div
+                            class="password-icon"
+                            (click)="togglePassword(1)"
+                          >
+                            <span
+                              class="fas"
+                              [ngClass]="
+                                password[1] ? 'fa-eye' : 'fa-eye-slash'
+                              "
+                            ></span>
+                          </div>
+                        </div>
+                        <div
+                          *ngIf="
+                            signupForm.errors &&
+                            signupForm.get('user.confirmPassword')?.touched
+                          "
+                          class="text-danger"
+                        >
+                          {{ "register.confirmPassword" | translate }}
+                        </div>
+                      </div>
+
+                      <!-- Password validation error messages -->
+                      <div>
+                        <!-- Min Length -->
+                        <div
+                          [ngClass]="{
+                            'text-success': passwordValidations.minLength,
+                            'text-danger': !passwordValidations.minLength
+                          }"
+                        >
+                          <small>Au moins 8 caractères</small>
+                        </div>
+
+                        <!-- Lowercase Letter -->
+                        <div
+                          [ngClass]="{
+                            'text-success': passwordValidations.hasLowercase,
+                            'text-danger': !passwordValidations.hasLowercase
+                          }"
+                        >
+                          <small>Une lettre minuscule</small>
+                        </div>
+
+                        <!-- Uppercase Letter -->
+                        <div
+                          [ngClass]="{
+                            'text-success': passwordValidations.hasUppercase,
+                            'text-danger': !passwordValidations.hasUppercase
+                          }"
+                        >
+                          <small>Une lettre majuscule</small>
+                        </div>
+
+                        <!-- Number -->
+                        <div
+                          [ngClass]="{
+                            'text-success': passwordValidations.hasNumber,
+                            'text-danger': !passwordValidations.hasNumber
+                          }"
+                        >
+                          <small>Un chiffre</small>
+                        </div>
+
+                        <!-- Special Character -->
+                        <div
+                          [ngClass]="{
+                            'text-success': passwordValidations.hasSpecialChar,
+                            'text-danger': !passwordValidations.hasSpecialChar
+                          }"
+                        >
+                          <small>Un caractère spécial (!&#64;#$%^&amp;*)</small>
+                          <!-- Escaped special characters -->
+                        </div>
+                           <div
+                      [ngClass]="{
+                        'text-success': this.passwordMatchValidators(),
+                        'text-danger': !this.passwordMatchValidators()
+                      }"
+                    >
+                      <small>Mot de passe compatible</small>
+                      <!-- Escaped special characters -->
+                    </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <hr />
+                  <div class="row" [class.disabled]="siretErrorMessage">
+                    <div class="col-md-12">
+                      <h4>Message</h4>
+                    </div>
+                    <div class="form-group" formGroupName="company">
+                      <label for="message" class="form-label"
+                        >Décrivez votre besoin
+                      </label>
+                      <ngx-editor-menu
+                        [editor]="editor"
+                        [toolbar]="toolbar"
+                      ></ngx-editor-menu>
+                      <ngx-editor
+                        [editor]="editor"
+                        formControlName="message"
+                        placeholder="Décrivez votre besoin en quelques mots..."
+                      >
+                      </ngx-editor>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="dont-have">
+                    <label>
+                      <input type="checkbox" formControlName="terms" />
+                      J'ai lu et j'accepte tous les
+                      <a [routerLink]="routes.privacypolicy"
+                        >Termes et Conditions</a
+                      >
+                    </label>
+                  </div>
+
+                  <button
+                    type="submit"
+                    class="btn btn-primary w-100"
+                    [disabled]="!signupForm.valid || siretErrorMessage"
+                  >
+                    Envoyer ma demande
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <!-- /Login Content -->
+    </div>
+  </div>
+</div>

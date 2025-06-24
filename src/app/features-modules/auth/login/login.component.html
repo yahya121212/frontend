@@ -1,0 +1,119 @@
+
+<div class="main-wrapper account-page">
+  <!-- Page Content -->
+  <div class="login-wrapper">
+    <div class="content">
+      <!-- Login Content -->
+      <div class="account-content">
+        <div class="align-items-center justify-content-center">
+          <div class="login-right">
+            <div class="login-header text-center">
+              <a  (click)="goBack()"
+                ><img src="assets/img/interim.png" alt="logo" class="img-fluid"
+              /></a>
+              <h3>Connectez-vous</h3>
+            </div>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <div *ngIf="loginError" class="alert alert-danger">
+                {{ loginError }}
+              </div>
+              <div class="input-block">
+                <label for="email-address" class="focus-label"
+                  >Email <span class="label-star"> *</span></label
+                >
+                <input
+                  type="text"
+                  formControlName="email"
+                  class="form-control floating"
+                />
+              </div>
+              <div class="input-block">
+                <label for="password" class="focus-label"
+                  >Mot de passe <span class="label-star"> *</span></label
+                >
+                <div class="position-relative">
+                  <input
+                    [type]="password[0] ? 'password' : 'text'"
+                    formControlName="password"
+                    class="form-control floating pass-input"
+                  />
+                  <div
+                    class="password-icon"
+                    (click)="togglePassword(0)"
+                    tabindex="0"
+                  >
+                    <span
+                      class="fas"
+                      [ngClass]="password[0] ? 'fa-eye' : 'fa-eye-slash'"
+                    ></span>
+                  </div>
+                </div>
+              </div>
+              <button
+                class="btn btn-primary w-100 btn-lg login-btn d-flex align-items-center justify-content-center"
+                type="submit"
+              >
+                Se connecter
+                <i class="feather icon-arrow-right ms-2"></i>
+              </button>
+
+              <div class="login-or">
+                <p>
+                  <span>{{ "login.or" | translate }}</span>
+                </p>
+              </div>
+
+              <div style="justify-content: center;margin-top: -25px;" class="row social-login">
+                <!-- <div class="col-sm-4"> -->
+              <div id="googleBtn"></div>
+
+                <!-- <div class="col-sm-4">
+                  <a href="javascript:void(0);" class="btn btn-block"
+                    ><img
+                      src="assets/img/icon/fb-icon.svg"
+                      alt="Fb"
+                    />Facebook</a
+                  >
+                </div>
+                <div class="col-sm-4">
+                  <a href="javascript:void(0);" class="btn btn-block">
+                    <img
+                      width="20px"
+                      height="20px"
+                      src="assets/img/icon/linkedin-icon.svg"
+                      alt="linkedIn"
+                    />LinkedIn</a
+                  >
+                </div> -->
+              </div>
+
+              <div class="row">
+                <div
+                  class="col-sm-8 d-flex align-items-center justify-content-start"
+                >
+                  <a (click)="goBack()" class="ms-2 mt-3">
+                    Créer un Compte
+                  </a>
+                </div>
+                <div
+                  class="col-sm-4 d-flex justify-content-end align-items-center"
+                >
+                  <a
+                    class="forgot-link"
+                    style="white-space: nowrap"
+                    [routerLink]="routes.forgot_password"
+                  >
+                    Mot de passe oublié ?
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- /Login Content -->
+    </div>
+  </div>
+
+  <!-- /Page Content -->
+</div>

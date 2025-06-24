@@ -1,0 +1,24 @@
+@keyframes slidein {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slidein {
+  animation-name: slidein;
+  animation-duration: 0.8s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
+}
+
+// Optional: delay generator (from .delay-100 to .delay-1000)
+@for $i from 1 through 10 {
+  .delay-#{$i}00 {
+    animation-delay: #{$i * 100}ms;
+  }
+}

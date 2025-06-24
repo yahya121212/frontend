@@ -1,0 +1,219 @@
+<!-- Page Content -->
+<div class="print-content" #contentToPrint>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-12">
+        <div class="company-detail-block pt-0">
+          <div class="company-detail">
+            <div class="company-detail-image">
+              <img
+                [src]="
+                  candidate?.image !== null ? baseUrl + candidate?.image : ''
+                "
+                class="img-fluid"
+                alt="profile"
+              />
+            </div>
+            <div class="company-title">
+              <h4>{{ getFullName(candidate) }}</h4>
+              <p>{{ candidate?.profileTitle || "" }}</p>
+            </div>
+            <a
+              href="javascript:void(0)"
+              (click)="downloadPdf()"
+              [class.disabled]="!isPdfReady && disable"
+              class="no-print"
+            >
+              <img
+                src="assets/img/icon/file.png"
+                alt="pdf"
+                width="40"
+                height="40"
+              />
+              <span *ngIf="!isPdfReady" class="loading-text"
+                >Preparing PDF...</span
+              >
+            </a>
+          </div>
+          <div class="company-address">
+            <ul>
+              <li>
+                <i class="feather icon-map-pin"></i
+                >{{ candidate?.location?.city?.name || "" }}
+              </li>
+              <li>
+                <i class="feather icon-calendar"></i
+                >{{ getDate(candidate?.profileUpdatedAt) }}
+              </li>
+              <li><i class="feather icon-star"></i>5.0, 245 Avis</li>
+            </ul>
+          </div>
+          <div class="project-proposal-detail">
+            <ul>
+              <li>
+                <div class="proposal-detail-img">
+                  <i class="feather icon-email"></i>
+                  <img src="assets/img/icon/computer-line.svg" alt="icons" />
+                </div>
+                <div class="proposal-detail text-capitalize">
+                  <span class="d-block">Recommended</span>
+                  <p class="mb-0">89%</p>
+                </div>
+              </li>
+              <li>
+                <div class="proposal-detail-img">
+                  <img src="assets/img/icon/time-line.svg" alt="icons" />
+                </div>
+                <div class="proposal-detail text-capitalize">
+                  <span class="d-block">Nombre De Missions</span>
+                  <p class="mb-0">22</p>
+                </div>
+              </li>
+              <li>
+                <div class="proposal-detail-img">
+                  <img src="assets/img/icon/user-heart-line.svg" alt="icons" />
+                </div>
+                <div class="proposal-detail text-capitalize">
+                  <span class="d-block">Status</span>
+                  <p class="mb-0">Actif</p>
+                </div>
+              </li>
+              <li>
+                <div class="proposal-detail-img">
+                  <img src="assets/img/icon/user-heart-line.svg" alt="icons" />
+                </div>
+                <div class="proposal-detail text-capitalize">
+                  <span class="d-block">Evaluations</span>
+                  <p class="mb-0">10</p>
+                </div>
+              </li>
+              <li>
+                <div class="proposal-detail-img">
+                  <img src="assets/img/icon/translate-2.svg" alt="icons" />
+                </div>
+                <div class="proposal-detail text-capitalize">
+                  <span class="d-block">Langues</span>
+                  <p class="mb-0">
+                    {{ getFirstTwoLanguages(candidate?.candidateLanguages) }}
+                  </p>
+                </div>
+              </li>
+              <li>
+                <div class="proposal-detail-img">
+                  <img src="assets/img/icon/translate.svg" alt="icons" />
+                </div>
+                <div class="proposal-detail text-capitalize">
+                  <span class="d-block">Niveau</span>
+                  <p class="mb-0">
+                    {{
+                      getFirstTwoLanguagesLevel(candidate?.candidateLanguages)
+                    }}
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="company-detail-block company-description">
+          <h4 class="company-detail-title">Expérience Professionnelle</h4>
+
+          <div
+            class="experience-set"
+            *ngFor="let exp of candidate?.experiences"
+          >
+            <div class="experience-set-img">
+              <img src="assets/img/icon/expereience.png" alt="expérience" />
+            </div>
+            <div class="experience-set-content">
+              <h5>
+                {{ exp.postTitle
+                }}<span
+                  >{{ exp.startDate | date : "yyyy" }} -
+                  {{ exp.endDate | date : "yyyy" }}</span
+                >
+              </h5>
+              <span>{{ exp.companyName }}</span>
+              <p>{{ exp.description || "Aucune description fournie" }}</p>
+            </div>
+          </div>
+
+          <div *ngIf="!candidate?.experiences?.length" class="no-experience">
+            Aucune expérience professionnelle renseignée
+          </div>
+        </div>
+        <div class="company-detail-block company-description">
+          <h4 class="company-detail-title">Formation</h4>
+
+          <div
+            class="experience-set"
+            *ngFor="let formation of candidate?.formations"
+          >
+            <div class="experience-set-img">
+              <img src="assets/img/icon/report.png" alt="formation" />
+            </div>
+            <div class="experience-set-content">
+              <h5>
+                {{ formation.title
+                }}<span
+                  >{{ formation.startDate | date : "yyyy" }} -
+                  {{ formation.endDate | date : "yyyy" }}</span
+                >
+              </h5>
+              <span>{{ formation.institution }}</span>
+              <p>
+                {{
+                  formation.description || "Aucune description supplémentaire"
+                }}
+              </p>
+            </div>
+          </div>
+
+          <div *ngIf="!candidate?.formations?.length" class="no-education">
+            Aucune formation renseignée
+          </div>
+        </div>
+      </div>
+
+      <!-- Blog Sidebar -->
+      <div
+        class="col-lg-4 col-md-12 sidebar-right theiaStickySidebar project-client-view"
+      >
+        <div class="stickybar">
+          <div class="card budget-widget">
+            <h6>Compétences</h6>
+            <div class="tags" style="display: flex; flex-wrap: wrap; gap: 8px">
+              <span
+                *ngFor="let skill of candidate?.candidateSkills"
+                class="badge badge-pill badge-design"
+                style="
+                  white-space: normal;
+                  word-break: break-word;
+                  margin-bottom: 5px;
+                "
+              >
+                {{ skill.skill.name }}
+              </span>
+            </div>
+          </div>
+          <div class="card budget-widget no-print">
+            <h6>Localisation</h6>
+            <div class="map-location p-0">
+              <iframe
+                [src]="loadMap()"
+                width="100%"
+                height="300"
+                style="border: 0"
+                allowfullscreen
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              >
+              </iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /Blog Sidebar -->
+    </div>
+  </div>
+</div>
+<!-- /Page Content -->
