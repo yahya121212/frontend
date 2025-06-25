@@ -10,6 +10,7 @@ const routes: Routes = [
     children: [
       {
         path: 'about',
+        title: 'Votre partenaire en interime et recrutement spécialisé',
         loadChildren: () =>
           import('./about-us/about-us.module').then((m) => m.AboutUsModule),
       },
@@ -75,11 +76,11 @@ const routes: Routes = [
         path: 'faq',
         loadChildren: () => import('./faq/faq.module').then((m) => m.FaqModule),
       },
-      { 
-        path: '404-page', 
-        loadChildren: () => import('./errorfound/errorfound.module').then(m => m.ErrorfoundModule) 
+      {
+        path: '404-page',
+        loadChildren: () => import('./errorfound/errorfound.module').then(m => m.ErrorfoundModule)
       },
-      
+
     ],
   },
 ];
@@ -88,4 +89,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class PagesRoutingModule {}
+export class PagesRoutingModule { }
