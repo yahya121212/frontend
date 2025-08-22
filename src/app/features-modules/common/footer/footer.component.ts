@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { routes } from 'src/app/core/helpers/routes/routes';
 
@@ -8,7 +9,28 @@ import { routes } from 'src/app/core/helpers/routes/routes';
 })
 export class FooterComponent {
   public routes = routes;
+  pages: any[] = [];
 
   dateNow: Date = new Date();
   date = this.dateNow.getFullYear();
+  constructor(
+
+    private http: HttpClient
+  ) {
+    this.http.get<any[]>('http://localhost:3000/api/page-builder').subscribe({
+      next: (data) => this.pages = data
+    });
+  }
+
+  getFirstTitleText(pageData: any): string | null {
+    const firstTitleBlock = pageData.data.find((block: any) => block.type === 'title');
+    return pageData?.title ? pageData.title : firstTitleBlock ? firstTitleBlock.content?.text : null;
+  }
+  goToPage(page: any) {
+    // Adapte le chemin selon ta route front
+    // Exemple: /page/:id
+    window.location.href = `/page/${page.id}`;
+    // Ou avec le router Angular si tu préfères :
+    // this.router.navigate(['/page', page.id]);
+  }
 }

@@ -614,7 +614,7 @@ export class FreelancersComponent {
       console.error('Invalid or empty CV URL provided');
       return;
     }
-
+    console.log('CV URL:', url);
     // Construct the full URL
     const fullUrl = this.baseUrl + url;
     this.pdfStrUrl = fullUrl;

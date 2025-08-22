@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
-    canActivate: [AdminGuard],
+    // canActivate: [AdminGuard],
     children: [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       {
@@ -163,6 +163,17 @@ const routes: Routes = [
           import('./user-profiles/user-profile/user-profile.module').then(
             (m) => m.UserProfileModule
           ),
+      },
+       {
+        path: 'tables',
+        loadChildren: () =>
+          import('./tables/tables.module').then((m) => m.TablesModule),
+      },
+      {
+        path: 'page-builder',
+        // canActivate: [AuthenticateGuard],
+        loadChildren: () =>
+          import('./page-builder/page-builder.module').then((m) => m.PageBuilderModule),
       },
       {
         path: 'auth',

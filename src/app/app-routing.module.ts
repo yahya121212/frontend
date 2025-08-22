@@ -1,7 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { PageViewerComponent } from './features-modules/pages/page-viewer/page-viewer.component';
 
 const routes: Routes = [
+  {
+    path: 'page/:id',
+    loadChildren: () => import('./features-modules/pages/page-viewer/page-viewer-routing.module').then((m) => m.PageViewerRoutingModule),
+
+  },
   {
     path: '',
     loadChildren: () =>
@@ -33,4 +39,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

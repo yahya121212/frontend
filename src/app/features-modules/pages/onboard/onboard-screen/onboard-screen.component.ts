@@ -36,7 +36,7 @@ export class OnboardScreenComponent implements OnInit {
   public routes = routes;
   public displayBlock = false;
   public displayNone = false;
-
+  public showNoCvErr: boolean = false;
   public skills: number[] = [];
   public education: number[] = [];
   public certification: number[] = [];
@@ -92,10 +92,12 @@ export class OnboardScreenComponent implements OnInit {
 
     this.form = this.fb.group({
       personalDetails: this.fb.group({
-        lastName: [''],
-        firstName: [''],
+        lastName: ['', Validators.required],
+        firstName: ['', Validators.required],
         birthday: [''],
-        phoneNumber: ['', Validators.required],
+        phoneNumber: ['',
+          [Validators.pattern(/^[0-9]{8,15}$/),
+          Validators.required]],
         emailAddress: [localStorage.getItem('email')],
       }),
       jobTitle: [''],
@@ -182,19 +184,25 @@ export class OnboardScreenComponent implements OnInit {
       next: (res) => {
         this.dbLanguages = res;
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
   onNextClick(): void {
+    this.displayErrNoCV()
     const postalCodeControl = this.locationForm.get('postalCode');
+
     const cityControl = this.locationForm.get('city');
     const phoneControl = this.form.get('personalDetails.phoneNumber');
+    const firstNameControl = this.form.get('personalDetails.firstName');
+    const lastNameControl = this.form.get('personalDetails.lastName');
     postalCodeControl?.markAsTouched();
     cityControl?.markAsTouched();
+    firstNameControl?.markAsTouched();
+    lastNameControl?.markAsTouched();
     phoneControl?.markAsTouched();
 
-    if (this.locationForm.invalid || phoneControl?.invalid) {
+    if (this.locationForm.invalid || phoneControl?.invalid || firstNameControl?.invalid || lastNameControl?.invalid || this.showNoCvErr) {
       return; // Stop further execution
     }
 
@@ -352,10 +360,10 @@ export class OnboardScreenComponent implements OnInit {
         this.fb.group({
           degreeName: [
             education['Diplôme'] ||
-              education['Certification'] ||
-              education['Formation'] ||
-              education['nom'] ||
-              '',
+            education['Certification'] ||
+            education['Formation'] ||
+            education['nom'] ||
+            '',
           ],
           universityName: [
             education['etablissement'] || education['Délivrée par'] || '',
@@ -618,6 +626,14 @@ export class OnboardScreenComponent implements OnInit {
     }
   }
 
+  displayErrNoCV() {
+    if (this.cvs && this.cvs.length > 0) {
+      this.showNoCvErr = false
+    } else {
+
+      this.showNoCvErr = true
+    }
+  }
   create(event: any) {
     // Check if the form is valid
     if (this.form.invalid) {

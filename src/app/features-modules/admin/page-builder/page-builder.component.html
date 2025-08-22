@@ -1,0 +1,149 @@
+<div class="page-wrapper">
+
+    <h2 class="pb-title">Page Builder</h2>
+
+    <div class="add-section">
+        <button mat-raised-button *ngFor="let type of sectionTypes" (click)="addSection(type)" class="pb-btn"
+            [ngClass]="type">
+            <mat-icon *ngIf="type === 'title'">title</mat-icon>
+            <mat-icon *ngIf="type === 'description'">notes</mat-icon>
+            <mat-icon *ngIf="type === 'image'">image</mat-icon>
+            Ajouter {{ type | titlecase }}
+        </button>
+
+    </div>
+    <div style="width: 70%;" class="section-content">
+        <mat-form-field appearance="outline" class="pb-form-field">
+            <mat-label>Titre</mat-label>
+            <input matInput [(ngModel)]="title" />
+        </mat-form-field>
+
+    </div>
+    <div cdkDropList (cdkDropListDropped)="drop($event)" class="sections-list">
+        <div *ngFor="let section of sections; let i = index" cdkDrag>
+            <mat-card class="section-card">
+
+                <div class="section-header">
+                    <span class="section-type">
+                        <mat-icon *ngIf="section.type === 'title'">title</mat-icon>
+                        <mat-icon *ngIf="section.type === 'description'">notes</mat-icon>
+                        <mat-icon *ngIf="section.type === 'image'">image</mat-icon>
+                        {{ section.type | titlecase }}
+                    </span>
+
+                    <span class="actions">
+                        <button mat-icon-button color="primary" *ngIf="!section.edit" (click)="editSection(section)"
+                            class="pb-btn-action">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" (click)="removeSection(i)" class="pb-btn-action">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                        <mat-icon cdkDragHandle class="drag-handle">drag_handle</mat-icon>
+                    </span>
+                </div>
+
+                <div class="section-content">
+                    <!-- Title Section -->
+                    <div *ngIf="section.type === 'title'">
+                        <div *ngIf="section.edit">
+                            <mat-form-field appearance="outline" class="pb-form-field">
+                                <mat-label>Titre</mat-label>
+                                <input matInput [(ngModel)]="section.content.text" />
+                            </mat-form-field>
+                            <div class="pb-options">
+
+                                <span *ngIf="section.options.backgroundImage" class="pb-bg-preview">
+                                    <img [src]="section.options.backgroundImage" alt="bg" />
+                                </span>
+                                <mat-form-field>
+                                    <mat-label>Police</mat-label>
+                                    <mat-select [(ngModel)]="section.options.fontFamily">
+                                        <mat-option value="'Arial', sans-serif">Arial</mat-option>
+                                        <mat-option value="'Times New Roman', serif">Times New Roman</mat-option>
+                                        <mat-option value="'Courier New', monospace">Courier New</mat-option>
+                                        <mat-option value="'Roboto', sans-serif">Roboto</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>Taille police</mat-label>
+                                    <input matInput type="number" min="10" max="72"
+                                        [(ngModel)]="section.options.fontSize" />
+                                </mat-form-field>
+
+                            </div>
+                            <button mat-stroked-button color="primary" (click)="saveSection(section)"
+                                class="pb-btn-save">
+                                Enregistrer
+                            </button>
+                        </div>
+                        <div *ngIf="!section.edit" [ngStyle]="{
+                              'background-color': section.options?.backgroundColor,
+                              'background-image': section.options?.backgroundImage ? 'url(' + section.options.backgroundImage + ')' : 'none',
+                              'background-size': 'cover',
+                              'font-family': section.options?.fontFamily,
+                              'font-size': section.options?.fontSize ? section.options.fontSize + 'px' : ''
+                            }">
+                            <h3>{{ section.content.text }}</h3>
+                        </div>
+                    </div>
+                    <!-- Description Section -->
+                    <div *ngIf="section.type === 'description'">
+                        <div *ngIf="section.edit">
+                            <mat-label>Description</mat-label>
+
+
+                            <ngx-editor-menu [editor]="editor"></ngx-editor-menu>
+                            <ngx-editor [editor]="editor" [(ngModel)]="section.content.text"></ngx-editor>
+                            <button mat-stroked-button color="primary" (click)="saveSection(section)"
+                                class="pb-btn-save">
+                                Enregistrer
+                            </button>
+                        </div>
+                        <div *ngIf="!section.edit">
+                            <div [innerHTML]="section.content.text"></div>
+                        </div>
+                    </div>
+                    <!-- Image Section -->
+                    <div *ngIf="section.type === 'image'">
+                        <div *ngIf="section.edit">
+                            <button mat-stroked-button type="button" (click)="triggerFileInput(imageInput)">
+                                Télécharger une image
+                            </button>
+                            <input #imageInput type="file" accept="image/*"
+                                (change)="onSectionImageChange($event, section)" style="display:none" />
+                            <span *ngIf="section.content.url" class="pb-bg-preview">
+                                <img [src]="section.content.url" alt="Image section" />
+                            </span>
+                            <mat-form-field appearance="outline" class="pb-form-field">
+                                <mat-label>Texte alternatif</mat-label>
+                                <input matInput [(ngModel)]="section.content.alt" />
+                            </mat-form-field>
+                            <!-- Autres options éventuelles ici -->
+                            <button mat-stroked-button color="primary" (click)="saveSection(section)"
+                                class="pb-btn-save">
+                                Enregistrer
+                            </button>
+                        </div>
+                        <div *ngIf="!section.edit">
+                            <img [src]="section.content.url" [alt]="section.content.alt" class="pb-img" />
+                            <div><small>{{ section.content.alt }}</small></div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+<!-- 
+    <h3 class="pb-json-title">Aperçu JSON de la page</h3>
+    <pre class="pb-json">{{ pageJson }}</pre> -->
+
+    <div style="margin: 24px 0 0 10px;">
+        <button *ngIf="!pageId" mat-raised-button color="primary" (click)="savePage()">
+            Enregistrer la page
+        </button>
+        <button *ngIf="pageId" mat-raised-button color="accent" (click)="updatePage()">
+            Mettre à jour la page
+        </button>
+    </div>
+</div>

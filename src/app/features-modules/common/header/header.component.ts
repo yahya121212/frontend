@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { CommonService } from 'src/app/core/services/common/common.service';
 import { NavbarService } from 'src/app/core/services/navbar.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-header',
@@ -35,6 +36,8 @@ export class HeaderComponent {
   navbar: Array<header> = [];
   public header_bg = false;
   isEmployer: boolean = false;
+  pages: any[] = [];
+
   isMobile$: Observable<boolean>;
   constructor(
     private router: Router,
@@ -42,8 +45,12 @@ export class HeaderComponent {
     private navservices: NavbarService,
     public authService: AuthService,
     private common: CommonService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private http: HttpClient
   ) {
+    this.http.get<any[]>('http://localhost:3000/api/page-builder').subscribe({
+      next: (data) => this.pages = data
+    });
     this.common.base.subscribe((res: string) => {
       this.base = res;
       this.base1 = res;
@@ -60,11 +67,21 @@ export class HeaderComponent {
       .observe([Breakpoints.Handset])
       .pipe(map((result) => result.matches));
   }
+  open() {
+    console.log('open');
+
+    this.showPagesDropdown = !this.showPagesDropdown;
+  }
+  
+
 
   ngOnInit(): void {
+
     this.checkNavigation();
     this.isEmployer = this.authService.isEmployer();
   }
+  showPagesDropdown = false; // <-- Doit être false au départ
+
 
   checkNavigation() {
     const currentRoute = this.router.url;
@@ -75,10 +92,10 @@ export class HeaderComponent {
     }
 
     this.navigateToDash();
-  }
-
+  } 
   navigateToDash() {
     const role = localStorage.getItem('role');
+    
     if (role) {
       if (role === 'candidate') {
         this.router.navigate([routes.freelancer_dashboard]);
@@ -129,4 +146,6 @@ export class HeaderComponent {
       this.header_bg = true;
     }
   }
+  
 }
+

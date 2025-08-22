@@ -173,10 +173,10 @@ export class routes {
   public static get loginCandidat(): string {
     return this.auth + '/login-candidat/candidat';
   }
-    public static get loginCompany(): string {
+  public static get loginCompany(): string {
     return this.auth + '/login-company/company';
   }
-      public static get login(): string {
+  public static get login(): string {
     return this.auth + '/login';
   }
   public static get register(): string {
@@ -343,6 +343,9 @@ export class routes {
   }
   public static get pendingproject(): string {
     return this.employer + '/pending-projects';
+  }
+  public static pageDetails(id: string): string {
+    return this.baseUrl + `pages/page/${id}`;
   }
   public static get cancelledproject(): string {
     return this.employer + '/cancelled-projects';

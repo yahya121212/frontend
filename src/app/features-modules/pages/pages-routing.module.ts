@@ -76,6 +76,10 @@ const routes: Routes = [
         path: 'faq',
         loadChildren: () => import('./faq/faq.module').then((m) => m.FaqModule),
       },
+            {
+        path: 'page/:id',
+        loadChildren: () => import('./page-viewer/page-viewer.module').then((m) => m.PageViewerModule),
+      },
       {
         path: '404-page',
         loadChildren: () => import('./errorfound/errorfound.module').then(m => m.ErrorfoundModule)

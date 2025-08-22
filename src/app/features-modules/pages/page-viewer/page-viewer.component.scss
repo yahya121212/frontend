@@ -1,0 +1,34 @@
+.feature-items {
+    padding: 1rem;
+
+    img {
+        max-height: 80px;
+        margin-bottom: 1rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+}
+
+.about-content {
+    h2 {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+}
+
+.description-block {
+    width: 100%;
+    word-wrap: break-word; // coupe les mots trop longs
+    overflow-wrap: break-word; // idem, compatible avec tous les navigateurs
+    white-space: normal; // permet les retours à la ligne
+    line-height: 1.6;
+    padding: 10px;
+    border-radius: 6px;
+}

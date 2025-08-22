@@ -44,6 +44,7 @@ export class OnboardEmployerComponent implements OnInit {
   cities: any[] = [];
   locationForm: FormGroup;
   companyForm: FormGroup;
+    public employerForm!: FormGroup;
 
   constructor(
     private companyService: CompanyService,
@@ -68,6 +69,41 @@ export class OnboardEmployerComponent implements OnInit {
       workforce: ['', [Validators.required, Validators.min(1)]],
       location: this.locationForm,
       // Example: workforce must be >= 1
+    });
+
+
+    this.employerForm = this.fb.group({
+      // Step 1: Personal Info
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      phoneNumber: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      // Step 2: Company Info
+      companyName: ['', Validators.required],
+      tagline: ['' ],
+      established: ['', Validators.required],
+      companyOwner: ['', Validators.required],
+      industry: ['', Validators.required],
+      website: ['' ],
+      teamSize: [''],
+      intro: [''],
+      // Step 3: Socials
+      facebook: [''],
+      instagram: [''],
+      linkedin: [''],
+      behance: [''],
+      pinterest: [''],
+      twitter: [''],
+      websiteUrl: [''],
+      // Step 4: Location
+      address: ['', Validators.required],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+      postCode: ['', Validators.required],
+      // Step 5: KYC
+      kycType: [''],
+      kycNumber: [''],
+      // Ajoute d'autres champs si besoin
     });
   }
   ngOnInit(): void {
@@ -99,10 +135,10 @@ export class OnboardEmployerComponent implements OnInit {
     });
   }
 
-  block() {
+  blocks() {
     this.displayBlock = !this.displayBlock;
   }
-  none() {
+  nones() {
     this.displayNone = !this.displayNone;
   }
   addSkills() {
@@ -232,8 +268,69 @@ export class OnboardEmployerComponent implements OnInit {
       });
     }
   }
+  block() {
+    this.displayBlock = true;
+    this.displayNone = false;
+  }
 
-  save(form: FormGroup) {
-    console.log('event', this.companyForm.value);
+  none() {
+    this.displayBlock = false;
+    this.displayNone = true;
+  }
+
+  validateStep(step: number) {
+    // Mark all fields as touched to trigger validation messages
+    Object.keys(this.employerForm.controls).forEach(key => {
+      this.employerForm.get(key)?.markAsTouched();
+    });
+    
+    // Check if current step is valid before proceeding
+    var isValid:boolean |undefined = false;
+    
+    if (step === 1) {
+      isValid = this.employerForm.get('firstName')?.valid &&
+               this.employerForm.get('lastName')?.valid &&
+               this.employerForm.get('phoneNumber')?.valid &&
+               this.employerForm.get('email')?.valid;
+    } else if (step === 2) {
+      isValid = this.employerForm.get('companyName')?.valid &&
+               this.employerForm.get('tagline')?.valid &&
+               this.employerForm.get('established')?.valid &&
+               this.employerForm.get('companyOwner')?.valid &&
+               this.employerForm.get('industry')?.valid &&
+               this.employerForm.get('website')?.valid &&
+               this.employerForm.get('teamSize')?.valid &&
+               this.employerForm.get('intro')?.valid;
+    }
+    
+    if (isValid) {
+      this.selectedFieldSet[0] = step + 1;
+    }
+  }
+
+  onSubmit() {
+    if (this.employerForm.valid) {
+      // Submit the form
+      console.log('Form submitted:', this.employerForm.value);
+      this.selectedFieldSet[0] = 4; // Move to verification step
+    } else {
+      // Mark all fields as touched to show validation messages
+      Object.keys(this.employerForm.controls).forEach(key => {
+        this.employerForm.get(key)?.markAsTouched();
+      });
+    }
+  }
+
+  
+ 
+
+  save() {debugger
+    console.log('Formulaire employeur:', this.employerForm.value);
+
+    if (this.employerForm.invalid) {
+      this.employerForm.markAllAsTouched();
+      return;
+    }
+    console.log('Formulaire employeur:', this.employerForm.value);
   }
 }

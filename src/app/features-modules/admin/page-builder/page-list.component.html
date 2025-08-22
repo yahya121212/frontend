@@ -1,0 +1,38 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <!-- Page Header -->
+        <div class="page-header subscribe-head">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Pages</h3>
+                    
+                </div>
+                <div class="col-auto">
+                    <ng-container>
+                        <a class="btn add-user" (click)="createNewPage()" href="javascript:void(0)"
+                            data-bs-toggle="modal" data-bs-target="#add-company">
+                            <i class="fas fa-plus"></i> Créer une nouvelle page
+                        </a>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="loading">Chargement...</div>
+
+
+        <span style="display: bloc;width: 100%;" *ngIf="!loading">
+
+            <span style="display: flex;width: 100%;" *ngFor="let page of pages">
+                <span style="display: flex;width: 70%;">{{ getFirstTitleText(page) }}</span>
+                <button mat-button color="accent" (click)="editPage(page)">Modifier</button>
+            </span>
+            <span *ngIf="pages.length === 0">
+                <span>Aucune page enregistrée.</span>
+            </span>
+        </span>
+
+
+    </div>
+</div>

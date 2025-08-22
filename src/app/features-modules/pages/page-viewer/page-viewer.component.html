@@ -1,0 +1,53 @@
+<!-- Breadcrumb -->
+<div class="bread-crumb-bar">
+  <div class="container">
+    <div class="row align-items-center inner-banner">
+      <div class="col-md-12 col-12 text-center">
+        <div class="breadcrumb-list">
+          <h3>À propos de Intérim Online Pro-Tech</h3>
+          <nav aria-label="breadcrumb" class="page-breadcrumb">
+            <ol class="breadcrumb">r
+              <li class="breadcrumb-item">
+                <a  > Accueil</a>
+              </li>
+              <li class="breadcrumb-item" aria-current="page">À propos</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Breadcrumb -->
+<div class="page-view-content container mt-5 mb-5">
+  <ng-container *ngFor="let block of blocks">
+
+    <!-- Bloc titre -->
+    <h1 *ngIf="block.type === 'title'" [ngStyle]="{
+          'font-size.px': block.options?.fontSize,
+          'color': block.options?.textColor,
+          'font-family': block.options?.fontFamily,
+          'background-color': block.options?.backgroundColor
+        }" class="mb-4 text-center">
+      {{ block.content?.text }}
+    </h1>
+    <div *ngIf="block.type === 'description'" class="mb-4 description-block" [ngStyle]="{
+       'font-size.px': block.options?.fontSize,
+       'color': block.options?.textColor,
+       'font-family': block.options?.fontFamily,
+       'background-color': block.options?.backgroundColor,
+       'padding': '10px',
+       'border-radius': '6px'
+     }" [innerHTML]="block.content?.text">
+    </div>
+    <!-- Bloc image -->
+    <div *ngIf="block.type === 'image'" class="text-center mb-5">
+      <img [src]="block.content?.url" [alt]="block.content?.alt || 'Image'" [ngStyle]="{
+             'max-width': '100%',
+             'background-color': block.options?.backgroundColor,
+             'font-family': block.options?.fontFamily
+           }" class="img-fluid rounded shadow">
+    </div>
+
+  </ng-container>
+</div>
