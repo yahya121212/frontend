@@ -17,7 +17,7 @@ export class PageListComponent implements OnInit {
     ngOnInit() {
         this.fetchPages();
     }
-    private baseUrl = `http://localhost:3000/api/`; // URL to get zip codes
+    private baseUrl = `${environment.apiUrl}`; // URL to get zip codes
 
     fetchPages() {
         this.loading = true;

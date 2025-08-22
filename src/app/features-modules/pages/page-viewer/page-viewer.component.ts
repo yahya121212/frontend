@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AboutUsRoutingModule } from '../about-us/about-us-routing.module';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-page-viewer',
@@ -44,7 +45,7 @@ export class PageViewerComponent implements OnInit {
   }
 
   private loadPage(id: string): void {
-    this.http.get<any>(`http://localhost:3000/api/page-builder/${id}`).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/page-builder/${id}`).subscribe({
       next: (page) => {
         try {
           this.blocks = Array.isArray(page.data) ? page.data : JSON.parse(page.data);

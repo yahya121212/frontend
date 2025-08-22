@@ -9,6 +9,7 @@ import { CommonService } from 'src/app/core/services/common/common.service';
 import { NavbarService } from 'src/app/core/services/navbar.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -48,7 +49,7 @@ export class HeaderComponent {
     private breakpointObserver: BreakpointObserver,
     private http: HttpClient
   ) {
-    this.http.get<any[]>('http://localhost:3000/api/page-builder').subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/page-builder`).subscribe({
       next: (data) => this.pages = data
     });
     this.common.base.subscribe((res: string) => {

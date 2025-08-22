@@ -2,10 +2,9 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 type SectionType = 'title' | 'description' | 'image';
-import { environment } from 'src/environments/environment';
 import { Editor, Toolbar } from 'ngx-editor';
 import { Component, OnDestroy, OnInit,AfterViewInit, ChangeDetectorRef } from '@angular/core';
-
+import { environment } from 'src/environments/environment';
 interface SectionOptions {
     textColor: string; // <-- Ajoute cette ligne
     backgroundColor: string; // <-- Add this line
@@ -29,7 +28,7 @@ interface Section {
 export class PageBuilderComponent implements OnInit, OnDestroy {
     sections: Section[] = [];
     sectionTypes: SectionType[] = ['title', 'description', 'image'];
-    private baseUrl = `http://localhost:3000/api/`; // URL to get zip codes
+    private baseUrl = `${environment.apiUrl}`; // URL to get zip codes
     updatePage() {
         if (!this.pageId) return;
         const pageData = {

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { routes } from 'src/app/core/helpers/routes/routes';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-footer',
@@ -17,7 +18,7 @@ export class FooterComponent {
 
     private http: HttpClient
   ) {
-    this.http.get<any[]>('http://localhost:3000/api/page-builder').subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/page-builder`).subscribe({
       next: (data) => this.pages = data
     });
   }
