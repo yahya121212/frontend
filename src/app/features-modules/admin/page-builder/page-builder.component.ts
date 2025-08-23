@@ -37,7 +37,7 @@ export class PageBuilderComponent implements OnInit, OnDestroy {
         };
         const id = Number(this.pageId); // s'assurer que c’est un number
 
-        this.http.put(`${this.baseUrl}page-builder/${id}`, pageData).subscribe({
+        this.http.put(`${this.baseUrl}/page-builder/${id}`, pageData).subscribe({
             next: () => {
                 alert('Page mise à jour avec succès !');
                 this.router.navigate(['/admin/page-builder']);
@@ -49,6 +49,24 @@ export class PageBuilderComponent implements OnInit, OnDestroy {
         });
         
     }
+      deletePage() {
+    if (!this.pageId || !confirm('Êtes-vous sûr de vouloir supprimer cette page ?')) {
+      return;
+    }
+
+    const id = Number(this.pageId);
+    
+    this.http.delete(`${this.baseUrl}/page-builder/${id}`).subscribe({
+      next: () => {
+        alert('Page supprimée avec succès !');
+        this.router.navigate(['/admin/page-builder']);
+      },
+      error: (err) => {
+        console.error('Erreur de suppression', err);
+        alert('Erreur lors de la suppression');
+      }
+    });
+  }
     addSection(type: SectionType) {
         let content: any = {};
         if (type === 'title') content = { text: '' };
@@ -74,7 +92,7 @@ export class PageBuilderComponent implements OnInit, OnDestroy {
             title: this.title || 'Nouvelle page',
             data: this.sections
         };
-        this.http.post(`${this.baseUrl}page-builder`, pageData).subscribe({
+        this.http.post(`${this.baseUrl}/page-builder`, pageData).subscribe({
             next: () => {
                 alert('Page enregistrée avec succès !');
                 this.router.navigate(['/admin/page-builder']);
@@ -148,7 +166,7 @@ ngAfterViewInit(): void {
         this.route.paramMap.subscribe(params => {
             this.pageId = params.get('id');
             if (this.pageId) {
-                this.http.get<any>(`${this.baseUrl}page-builder/${this.pageId}`).subscribe(page => {
+                this.http.get<any>(`${this.baseUrl}/page-builder/${this.pageId}`).subscribe(page => {
                     this.title = page.title;
                     this.sections = page.data;
                 });

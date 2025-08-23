@@ -27,6 +27,7 @@
             <span style="display: flex;width: 100%;" *ngFor="let page of pages">
                 <span style="display: flex;width: 70%;">{{ getFirstTitleText(page) }}</span>
                 <button mat-button color="accent" (click)="editPage(page)">Modifier</button>
+                <button mat-button color="warn" (click)="deletePage(page.id)">Supprimer</button>
             </span>
             <span *ngIf="pages.length === 0">
                 <span>Aucune page enregistrée.</span>
