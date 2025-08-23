@@ -45,19 +45,20 @@ export class PageListComponent implements OnInit {
             return;
         }
 
-      id = Number(id);
-    
-    this.http.delete(`${this.baseUrl}/page-builder/${id}`).subscribe({
-      next: () => {
-        alert('Page supprimée avec succès !');
-        this.router.navigate(['/admin/page-builder']);
-      },
-      error: (err) => {
-        console.error('Erreur de suppression', err);
-        alert('Erreur lors de la suppression');
-      }
-    });
-  }
+        id = Number(id);
+
+        this.http.delete(`${this.baseUrl}/page-builder/${id}`).subscribe({
+            next: () => {
+                this.fetchPages();
+                alert('Page supprimée avec succès !');
+                this.router.navigate(['/admin/page-builder']);
+            },
+            error: (err) => {
+                console.error('Erreur de suppression', err);
+                alert('Erreur lors de la suppression');
+            }
+        });
+    }
     savePage() {
         // Logic to save the page
     }
