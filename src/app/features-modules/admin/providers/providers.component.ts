@@ -32,6 +32,7 @@ import {
   minDateValidator,
   markFormGroupTouched,
 } from 'src/app/core/services/common/common-functions';
+import { ViewportScroller } from '@angular/common';
 
 declare var bootstrap: any;
 interface data {
@@ -137,7 +138,8 @@ export class ProvidersComponent implements OnInit {
     private languageService: LanguageService,
     private companyService: CompanyService,
     private locationService: LocationService,
-    private router: Router
+    private router: Router,
+    private viewportScroller: ViewportScroller
   ) {
     const today = new Date();
     this.minDate = today.toISOString().split('T')[0];
@@ -367,6 +369,8 @@ export class ProvidersComponent implements OnInit {
         status: this.selectedStatus,
       });
     }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
   }
 
   filterProjects(data: any) {
@@ -733,8 +737,12 @@ export class ProvidersComponent implements OnInit {
       });
     }
   }
-
+  scrollToTop(): void {
+    this.viewportScroller.scrollToPosition([0, 0]);
+  }
   onSubmit() {
+    this.viewportScroller.scrollToPosition([0, 0]);
+
     markFormGroupTouched(this.addOfferForm);
     this.globalErrorMessage = false; // Reset the error message before each submission
 
@@ -756,6 +764,7 @@ export class ProvidersComponent implements OnInit {
     } else {
       console.error('Form is invalid');
     }
+
   }
 
   getAllActiveComps() {

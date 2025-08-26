@@ -420,6 +420,8 @@ export class ProjectsComponent implements OnInit {
           this.getTableData();
         },
         (error) => {
+         alert('Un compte existe déjà avec cette adresse e-mail.');
+
           console.error('Error creating client:', error);
         }
       );
