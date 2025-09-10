@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class ErrorHandlerService implements ErrorHandler {
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
   handleError(error: any): void {
     if (error instanceof HttpErrorResponse) {
       if (error.status === 401) {
-        window.alert(error.message);
+        window.alert("Vous devez vérifier votre compte. Vous avez déjà reçu un mail de vérification, veuillez vérifier votre boîte mail."
+        );
         setTimeout(() => {
           this.router.navigate(['/auth/login']);
         });
