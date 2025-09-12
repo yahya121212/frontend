@@ -1,22 +1,23 @@
 <app-freelancerheader></app-freelancerheader>
 @if (freelancer === true) {
-  <!-- Page Content -->
-  <div class="content content-page"
-    [ngClass]="{'portfolio-page': page === 'portfolio', 'bookmark': last === 'withdraw-money' }">
-    <div class="container">
-      <div class="row">
-        <!-- sidebar -->
-        <div class="col-xl-3 col-lg-4 theiaStickySidebar">
-          <div class="stickybar">
-            <app-sidemenu></app-sidemenu>
-          </div>
+<!-- Page Content -->
+<div class="content content-page"
+  [ngClass]="{'portfolio-page': page === 'portfolio', 'bookmark': last === 'withdraw-money' }">
+  <div class="container">
+    <div class="row">
+      <!-- sidebar -->
+      <div class="col-xl-3 col-lg-4 theiaStickySidebar">
+        <div class="stickybar">
+          <app-sidemenu *ngIf="isLoggedIn"></app-sidemenu>
         </div>
-        <!-- /sidebar -->
-        <!-- <div class="col-xl-9 col-md-8"
+      </div>
+      <!-- /sidebar -->
+      <!-- <div class="col-xl-9 col-md-8"
         *ngIf="page !== 'reviews' && page !== 'portfolio' && page !== 'statement'">
         <router-outlet></router-outlet>
       </div> -->
-      <div class="col-xl-9 col-lg-8">
+      <div [ngClass]="isLoggedIn ? 'col-xl-9 col-lg-8' : 'col-xl-12 col-lg-12'">
+        >
         <router-outlet></router-outlet>
       </div>
     </div>
@@ -25,5 +26,5 @@
 <!-- /Page Content -->
 }
 @if (freelancer === false) {
-  <router-outlet></router-outlet>
+<router-outlet></router-outlet>
 }

@@ -20,7 +20,9 @@ export class ProfileService {
   get profile(): any {
     return this.userProfile;
   }
-
+  isLoggedIn(): boolean {
+    return this.userProfileSource.value !== null;
+  }
   set profile(profile: any) {
     this.userProfile = profile;
     localStorage.setItem('userProfile', JSON.stringify(profile)); // Save to localStorage

@@ -8,8 +8,10 @@
 
           <!-- Title -->
           <h2 style="color: white;" class="animate-slidein">
-            Vous êtes candidat ?<br /> Trouvez votre prochaine mission ou CDI. Inscrivez-vous dès maintenant ! <br />
-            <br /> Vous recrutez ?<br /> Publiez vos annonces gratuitement et trouvez le bon candidat rapidement.
+            Vous êtes candidat ?<br /> Trouvez votre prochaine mission ou CDI. <a [routerLink]="'/auth/register/candidat'"   class="link-underline"
+              style="cursor: pointer; color: #189ab4;">Inscrivez-vous</a> dès maintenant ! <br />
+            <br /> Vous recrutez ?<br /> <a [routerLink]="'/auth/register/company'" class="link-underline" style="cursor: pointer;color: #ff5b37;">Publiez</a> vos annonces
+            gratuitement et trouvez le bon candidat rapidement.
           </h2>
 
 

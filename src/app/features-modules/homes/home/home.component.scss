@@ -22,3 +22,23 @@
     animation-delay: #{$i * 100}ms;
   }
 }
+
+.link-underline {
+  position: relative;
+  text-decoration: none; /* enlever le soulignement classique */
+}
+
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px; /* espace sous le texte */
+  width: 0%;
+  height: 2px;
+  background-color: currentColor; /* prend la couleur du texte */
+  transition: width 0.3s ease-in-out;
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}

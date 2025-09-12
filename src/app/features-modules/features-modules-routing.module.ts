@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 // import { ErrorfoundComponent } from '../auth/errorfound/errorfound.component';
 import { FeaturesModulesComponent } from './features-modules.component';
 import { EmployerGuard } from '../core/guard/employer/employer.guard';
+import { ErrorfoundComponent } from './pages/errorfound/errorfound.component';
 
 const routes: Routes = [
   {
@@ -10,6 +11,10 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full',
   },
+  {
+  path: 'page-not-found',
+  component: ErrorfoundComponent, // ou le nom de votre composant 404
+},
   {
     path: '',
     component: FeaturesModulesComponent,
@@ -87,7 +92,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'home',
+    redirectTo: 'page-not-found',
   },
 ];
 

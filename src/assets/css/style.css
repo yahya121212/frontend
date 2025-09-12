@@ -2955,10 +2955,10 @@ html.menu-opened body header:before {
 -----------------------*/
 
 .home-banner {
-  background-image: url(../img/banner1.jpg);
+  background-image: url(../img/cover-int.jpg);
   background-position: center;
+  background-size: cover;
   background-repeat: no-repeat;
-  background-size: 100% 100%;
   position: relative;
   padding-top: 84px;
 }
@@ -7228,7 +7228,7 @@ textarea.form-control {
 -----------------------*/
 
 .home-five.home-banner {
-  background-image: url(../img/banner1.jpg);
+  background-image: url(../img/cover-int.jpg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -30833,7 +30833,7 @@ ul.download-item li:last-child {
   }
 
   .home-two {
-    background-image: url(../img/banner1.jpg);
+    background-image: url(../img/cover-int.jpg);
   }
 
   .btn-view {
