@@ -586,6 +586,7 @@ export class FreelancersComponent {
         Prénom: candidate.firstName || '',
         Email: candidate.email || '',
         Téléphone: candidate.phone || '',
+        Département: candidate?.location?.city?.department?.name || '',
         'Date de naissance': candidate.birthDate || '',
         Âge: candidate.age || '',
         // Rôle: candidate.role || '',
