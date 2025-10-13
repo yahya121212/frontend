@@ -222,6 +222,7 @@ export interface Candidate {
   birthDate: null;
   age: null;
   role: string;
+  localtion: string | null;
   emailVerifiedAt: Date | null;
   profileTitle: string | null;
   aiId: null;

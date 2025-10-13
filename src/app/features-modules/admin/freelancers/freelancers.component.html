@@ -290,7 +290,7 @@
                             Derniére connexion
                           </th>
                           <th mat-sort-header="status">Status</th>
-                          <th class="text-end"></th>
+                          <th class="text-end">Actions</th>
                         </tr>
                         @if (lstBoard.length === 0) {
                         <tr>
@@ -372,6 +372,9 @@
 
                           <td (click)="getProfile(candidate)">
                             {{ candidate?.phone }}
+                          </td>
+                          <td (click)="getProfile(candidate)">
+                            {{ candidate?.location ?  candidate?.location?.city?.department?.name : '' }}
                           </td>
                           <td (click)="getProfile(candidate)">
                             <div>
