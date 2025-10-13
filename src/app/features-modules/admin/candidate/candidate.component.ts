@@ -89,13 +89,17 @@ export class CandidateComponent {
         phone: [''],
         email: [''],
         image: [null],
+
+      }),
+      location: this.fb.group({
         department: [null],
         region: [null],
       }),
 
+
       skills: this.fb.array([this.createSkill()]),
       activities: this.fb.array([this.createActivity()]),
-      location: this.fb.array([this.createLocation()]),
+      // location: this.fb.array([this.createLocation()]),
 
       experiences: this.fb.array([this.createExperience()]),
       education: this.fb.array([this.createEducation()]),
@@ -326,6 +330,11 @@ export class CandidateComponent {
       department: response?.location?.city?.department?.name || '',
       region: response?.location?.city?.department?.region?.name || '',
     });
+    this.form.get('location')?.patchValue({
+      department: response?.location?.city?.department?.name || '',
+      region: response?.location?.city?.department?.region?.name || '',
+    });
+    debugger
     this.imgUrl = this.baseUrl + response.image;
 
     // Patch skills
@@ -390,7 +399,7 @@ export class CandidateComponent {
     } else {
       // If no education data, add one empty education group
       this.addEducation();
-     
+
     }
 
     // Patch experiences
