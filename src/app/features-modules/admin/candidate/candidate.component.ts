@@ -89,10 +89,13 @@ export class CandidateComponent {
         phone: [''],
         email: [''],
         image: [null],
+        department: [null],
+        region: [null],
       }),
 
       skills: this.fb.array([this.createSkill()]),
       activities: this.fb.array([this.createActivity()]),
+      location: this.fb.array([this.createLocation()]),
 
       experiences: this.fb.array([this.createExperience()]),
       education: this.fb.array([this.createEducation()]),
@@ -224,7 +227,7 @@ export class CandidateComponent {
       next: (res) => {
         this.dbLanguages = res;
       },
-      error: (err) => {},
+      error: (err) => { },
     });
   }
 
@@ -249,7 +252,12 @@ export class CandidateComponent {
 
     this.filteredLanguages = [];
   }
-
+  createLocation(): FormGroup {
+    return this.fb.group({
+      departement: [''], // Default empty value
+      region: [''], // Default empty value
+    });
+  }
   createSkill(): FormGroup {
     return this.fb.group({
       skillName: [''], // Default empty value
@@ -298,6 +306,9 @@ export class CandidateComponent {
   get skillsArray(): FormArray {
     return this.form.get('skills') as FormArray;
   }
+  get locationArray(): FormArray {
+    return this.form.get('location') as FormArray;
+  }
 
   // Example of accessing controls in the template
   removeSkills(index: number) {
@@ -312,6 +323,8 @@ export class CandidateComponent {
       profileTitle: response?.profileTitle || '',
       phone: response?.phone || '',
       email: response?.email || '',
+      department: response?.location?.city?.department?.name || '',
+      region: response?.location?.city?.department?.region?.name || '',
     });
     this.imgUrl = this.baseUrl + response.image;
 
@@ -360,10 +373,10 @@ export class CandidateComponent {
           this.fb.group({
             degreeName: [
               education['title'] ||
-                education['Certification'] ||
-                education['Formation'] ||
-                education['nom'] ||
-                '',
+              education['Certification'] ||
+              education['Formation'] ||
+              education['nom'] ||
+              '',
             ],
             universityName: [
               education['institution'] || education['Délivrée par'] || '',
@@ -377,6 +390,7 @@ export class CandidateComponent {
     } else {
       // If no education data, add one empty education group
       this.addEducation();
+     
     }
 
     // Patch experiences
@@ -444,7 +458,10 @@ export class CandidateComponent {
     const educationArray = this.form.get('education') as FormArray;
     educationArray.push(this.createEducation());
   }
-
+  addLocation() {
+    const locationArray = this.form.get('location') as FormArray;
+    locationArray.push(this.createLocation());
+  }
   removeEducation(i: number) {
     const educationArray = this.form.get('education') as FormArray;
     educationArray.removeAt(i);
