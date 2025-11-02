@@ -24,9 +24,14 @@ export class routes {
   public static get admin(): string {
     return this.baseUrl + '/admin';
   }
+  public static get recrutmentEntrprise(): string {
+    return this.pages + '/recrutment-entrprise';
+  }
+
   public static get home(): string {
     return this.baseUrl + '/home';
   }
+
   public static get home2(): string {
     return this.baseUrl + '/home2';
   }

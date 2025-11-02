@@ -68,6 +68,11 @@ const routes: Routes = [
             (m) => m.PrivacyPolicyModule
           ),
       },
+
+      {
+        path: 'recrutment-entrprise',
+        loadChildren: () => import('./recrutement-entrprise/recrutment-entrprise-routing.module').then((m) => m.RecrutmentEntrpriseRoutingModule),
+      },
       {
         path: 'otp',
         loadChildren: () => import('./otp/otp.module').then((m) => m.OtpModule),
@@ -76,7 +81,7 @@ const routes: Routes = [
         path: 'faq',
         loadChildren: () => import('./faq/faq.module').then((m) => m.FaqModule),
       },
-            {
+      {
         path: 'page/:id',
         loadChildren: () => import('./page-viewer/page-viewer.module').then((m) => m.PageViewerModule),
       },
