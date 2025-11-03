@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { RecrutmentEntrpriseRoutingModule } from './recrutment-entrprise-routing.module';
-import { RecrutmentEntrprise } from './recrutmentEntrprise';
+import { RecrutmentEntrprise } from './recrutment-entrprise.component';
 
  
 @NgModule({

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RecrutmentEntrprise } from './recrutmentEntrprise';
-   
+import { RecrutmentEntrprise } from './recrutment-entrprise.component';
+    
 const routes: Routes = [{ path: '', component: RecrutmentEntrprise }];
 
 @NgModule({
