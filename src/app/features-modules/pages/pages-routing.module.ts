@@ -70,7 +70,7 @@ const routes: Routes = [
       },
 
       {
-        path: 'recrutment-entrprise',
+        path: 'recrutment-entreprise',
         loadChildren: () => import('./recrutement-entrprise/recrutment-entrprise-routing.module').then((m) => m.RecrutmentEntrpriseRoutingModule),
       },
       {
