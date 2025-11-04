@@ -60,6 +60,9 @@ export class AuthService {
   isEmployer(): boolean {
     return localStorage.getItem('role') === 'company-employee' ? true : false;
   }
+  isCandidate(): boolean {
+    return localStorage?.getItem('role') === 'candidate' ? true : false;
+  }
 
   setIsLoggedIn(loggeIn: boolean): void {
     this.isLoggedIn = loggeIn;

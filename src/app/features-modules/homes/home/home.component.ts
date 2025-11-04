@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import * as AOS from 'aos';
 import { routes } from 'src/app/core/helpers/routes/routes';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 interface data {
   value: string;
 }
@@ -15,7 +16,8 @@ export class HomeComponent implements OnInit {
   public routes = routes;
   selected = 'freelancers';
   getLink = 'project';
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService
+  ) { }
   ngOnInit(): void {
     AOS.init({
       duration: 1200,
@@ -252,7 +254,11 @@ export class HomeComponent implements OnInit {
   toggleLike(index: number) {
     this.like[index] = !this.like[index];
   }
+  navigateToAdmin() {
+    this.authService.isCandidate() ? this.router.navigate([routes.registerCompany]) :
+      this.router.navigate([routes.admin_providers]);
 
+  }
   selectedList: data[] = [{ value: 'Projets' }, { value: 'Freelancers' }];
   navigation() {
     this.router.navigate([routes.freelancer_project]);
