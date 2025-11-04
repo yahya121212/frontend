@@ -10,12 +10,14 @@ const routes: Routes = [
 
       {
         path: 'login-candidat/candidat',
+        title: "Espace Candidat – Connectez-vous",
         loadChildren: () =>
           import('src/app/features-modules/auth/login/login.module').then(
             (m) => m.LoginModule
           ),
       }, {
         path: 'login-company/company',
+        title: "Espace Entreprise – Connectez-vous",
         loadChildren: () =>
           import('src/app/features-modules/auth/login/login.module').then(
             (m) => m.LoginModule

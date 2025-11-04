@@ -71,6 +71,7 @@ const routes: Routes = [
 
       {
         path: 'recrutment-entreprise',
+        title: "Recrutement Entreprise – Trouvez le personnel qualifié pour vos besoins",
         loadChildren: () => import('./recrutement-entrprise/recrutment-entrprise-routing.module').then((m) => m.RecrutmentEntrpriseRoutingModule),
       },
       {

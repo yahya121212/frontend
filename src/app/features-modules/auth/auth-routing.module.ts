@@ -16,12 +16,14 @@ const routes: Routes = [
       },
       {
         path: 'login-candidat/candidat',
+        title: "Espace Candidat – Connectez-vous",
         loadChildren: () =>
           import('src/app/features-modules/auth/login/login.module').then(
             (m) => m.LoginModule
           ),
       }, {
         path: 'login-company/company',
+        title: "Espace Entreprise – Connectez-vous",
         loadChildren: () =>
           import('src/app/features-modules/auth/login/login.module').then(
             (m) => m.LoginModule
@@ -36,6 +38,7 @@ const routes: Routes = [
       },
       {
         path: 'register-company',
+        title: "Vous recherchez du personnel qualifié ? Confiez vos besoins à Société Intérim Online Protec",
         loadChildren: () =>
           import('../auth/registe-company/register-company.module').then(
             (m) => m.RegisterCompanyModule

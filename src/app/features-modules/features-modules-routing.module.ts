@@ -9,6 +9,7 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'home',
+    title: "Société Intérim Online Protec - Votre Partenaire de Confiance pour l'Emploi et le Recrutement",
     pathMatch: 'full',
   },
   {
