@@ -141,9 +141,13 @@ export class CandidateComponent {
         }
       }
     });
- 
+    const locationPayload = {
+      city: this.form.value.location?.city || '',
+      department: this.form.value.location?.department || '',
+
+    }
     // Send the FormData to the backend
-    formData.set('location', JSON.stringify(this.locationsData));
+    formData.set('location', JSON.stringify(locationPayload));
     this.candidateService
       .updateCandidateProfile(this.candidate?.id, formData)
       .subscribe({
@@ -323,7 +327,7 @@ export class CandidateComponent {
   locationsData: any = {};
   patchFormData(response: any) {
     // Patch personal details
-    this.locationsData=response?.location || {};
+    this.locationsData = response?.location || {};
     this.form.get('personalDetails')?.patchValue({
       lastName: response?.lastName || '',
       firstName: response?.firstName || '',
