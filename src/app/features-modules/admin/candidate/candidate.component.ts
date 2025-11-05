@@ -141,9 +141,11 @@ export class CandidateComponent {
         }
       }
     });
+    this.locationsData
     const locationPayload = {
       department: this.form.value.location?.department || '',
       region: this.form.value.location?.region || '',
+      city: this.locationsData?.city?.name || null,
     }
     console.log('Location Payload:', locationPayload);
     // Send the FormData to the backend
