@@ -142,10 +142,10 @@ export class CandidateComponent {
       }
     });
     const locationPayload = {
-      city: this.form.value.location?.city || '',
       department: this.form.value.location?.department || '',
-
+      region: this.form.value.location?.region || '',
     }
+    console.log('Location Payload:', locationPayload);
     // Send the FormData to the backend
     formData.set('location', JSON.stringify(locationPayload));
     this.candidateService
