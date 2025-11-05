@@ -141,8 +141,9 @@ export class CandidateComponent {
         }
       }
     });
-
+ 
     // Send the FormData to the backend
+    formData.set('location', JSON.stringify(this.locationsData));
     this.candidateService
       .updateCandidateProfile(this.candidate?.id, formData)
       .subscribe({
@@ -319,8 +320,10 @@ export class CandidateComponent {
     this.skillsArray.removeAt(index); // Use removeAt method to remove from FormArray
   }
 
+  locationsData: any = {};
   patchFormData(response: any) {
     // Patch personal details
+    this.locationsData=response?.location || {};
     this.form.get('personalDetails')?.patchValue({
       lastName: response?.lastName || '',
       firstName: response?.firstName || '',
@@ -334,7 +337,6 @@ export class CandidateComponent {
       department: response?.location?.city?.department?.name || '',
       region: response?.location?.city?.department?.region?.name || '',
     });
-    debugger
     this.imgUrl = this.baseUrl + response.image;
 
     // Patch skills
