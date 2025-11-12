@@ -25,7 +25,7 @@ export class routes {
     return this.baseUrl + '/admin';
   }
   public static get recrutmentEntrprise(): string {
-    return this.pages + '/recrutment-entreprise';
+    return this.pages + '/recrutement-entreprise';
   }
 
   public static get home(): string {
