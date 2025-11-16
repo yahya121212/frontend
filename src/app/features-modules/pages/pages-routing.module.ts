@@ -74,6 +74,11 @@ const routes: Routes = [
         title: "Recrutement Entreprise – Trouvez le personnel qualifié pour vos besoins",
         loadChildren: () => import('./recrutement-entrprise/recrutment-entrprise-routing.module').then((m) => m.RecrutmentEntrpriseRoutingModule),
       },
+            {
+        path: 'page-candidat',
+        title: " Candidats – Métiers techniques & Second Oeuvre",
+        loadChildren: () => import('./page-candidat/page-candidat-routing.module').then((m) => m.pageCandidatRoutingModule),
+      },
       {
         path: 'otp',
         loadChildren: () => import('./otp/otp.module').then((m) => m.OtpModule),

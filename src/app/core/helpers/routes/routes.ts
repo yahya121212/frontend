@@ -27,7 +27,9 @@ export class routes {
   public static get recrutmentEntrprise(): string {
     return this.pages + '/recrutement-entreprise';
   }
-
+  public static get pageCandidat(): string {
+    return this.pages + '/page-candidat';
+  }
   public static get home(): string {
     return this.baseUrl + '/home';
   }

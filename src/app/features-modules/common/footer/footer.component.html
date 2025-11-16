@@ -82,11 +82,19 @@
               </div>
             </div>
             <div class="col-xl-3 col-md-6">
-              <div class="footer-widget footer-menu">
+              <div style="width: auto;" class="footer-widget footer-menu">
                 <h2 class="footer-title">Other Links</h2>
                 <ul>
                   <li style="width: max-content;">
                     <a [routerLink]="routes.recrutmentEntrprise" ><i class="fas fa-angle-right me-1"></i>Recrutement entreprise</a>
+                  </li>
+                    <li>
+                    <a href="assets/files/RH VIERGE001.pdf" download="RH VIERGE001.pdf">
+                      <i class="fas fa-angle-right me-1"></i>Relevé Heures
+                    </a>
+                  </li>
+                   <li style="width: auto;">
+                    <a [routerLink]="routes.pageCandidat" ><i class="fas fa-angle-right me-1"></i> Candidats – Métiers techniques & Second Oeuvre</a>
                   </li>
                   <!-- <li>
                     <a href="javascript:void(0);"><i class="fas fa-angle-right me-1"></i>Espace candidat</a>
@@ -97,11 +105,7 @@
                   <li>
                     <a [routerLink]="routes.pendingproject"><i class="fas fa-angle-right me-1"></i>Candidatures</a>
                   </li> -->
-                  <li>
-                    <a href="assets/files/RH VIERGE001.pdf" download="RH VIERGE001.pdf">
-                      <i class="fas fa-angle-right me-1"></i>Relevé Heures
-                    </a>
-                  </li>
+                
                   @for (page of pages; track page.id) {
                   <li>
                     <a [routerLink]="routes.pageDetails(page?.id)"><i class="fas fa-angle-right me-1"></i>{{
