@@ -12,11 +12,186 @@
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  <url>
+
+  <url><loc>https://www.interim-online.fr/pages/about</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/blank-page</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/onboard-screen</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/invoice</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/view-invoice</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/user-account-details</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/onboard-employer</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/term-condition</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/privacy-policy</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/recrutement-entreprise</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/page-candidat</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/otp</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/faq</loc></url>
+ <url>
     <loc>https://www.interim-online.fr/freelancer</loc>
-    <lastmod>2025-05-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/dashboard</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/candidate-profile</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/membership</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/chats</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/reviews</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/project</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+ 
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/portfolio</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/statement</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/payout</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/ongoing-projects</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/completed-projects</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/cancelled-projects</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/project-list</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/favourites</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/invitations</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/files</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/milestones</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/payments</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/profile-settings</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/project-proposals</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/task</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/verified</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/verify-identity</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/view-project-detail</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/delete-account</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/withdraw-money</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://www.interim-online.fr/freelancer/change-password</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
   </url>
   <url>
     <loc>https://www.interim-online.fr/employer</loc>
@@ -30,6 +205,19 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url><loc>https://www.interim-online.fr/pages/about</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/blank-page</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/onboard-screen</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/invoice</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/view-invoice</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/user-account-details</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/onboard-employer</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/term-condition</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/privacy-policy</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/recrutement-entreprise</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/page-candidat</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/otp</loc></url>
+  <url><loc>https://www.interim-online.fr/pages/faq</loc></url>
   <url>
     <loc>https://www.interim-online.fr/blog</loc>
     <lastmod>2025-05-19</lastmod>
