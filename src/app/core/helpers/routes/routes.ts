@@ -426,6 +426,9 @@ export class routes {
   public static get privacypolicy(): string {
     return this.pages + '/privacy-policy';
   }
+    public static get politcs(): string {
+    return this.pages + '/privacy-polices';
+  }
   public static get faq(): string {
     return this.pages + '/faq';
   }

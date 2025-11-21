@@ -68,7 +68,13 @@ const routes: Routes = [
             (m) => m.PrivacyPolicyModule
           ),
       },
-
+      {
+        path: 'privacy-polices',
+        loadChildren: () =>
+          import('./politcs/politcs.module').then(
+            (m) => m.PolitcsModule
+          ),
+      },
       {
         path: 'recrutement-entreprise',
         title: "Recrutement Entreprise – Trouvez le personnel qualifié pour vos besoins",
