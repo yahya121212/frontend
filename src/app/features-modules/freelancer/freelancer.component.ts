@@ -57,7 +57,7 @@ ngOnInit() {
       event.url === '/freelancer/project-details' ||
       event.url === '/freelancer/candidate-profile' ||
       event.url === '/freelancer/developers-details' ||
-      event.url === '/freelancer/project-list'
+      event.url === '/freelancer/offre-mission-interim'
     ) {
       this.freelancer = false;
       this.breadcrum = false;

@@ -373,7 +373,7 @@ export class routes {
     return this.freelance + '/files';
   }
   public static get projectList(): string {
-    return this.freelance + '/project-list';
+    return this.freelance + '/offre-mission-interim';
   }
   public static get freelancer_invitations(): string {
     return this.freelance + '/invitations';

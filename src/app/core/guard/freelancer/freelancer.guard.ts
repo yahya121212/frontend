@@ -28,7 +28,7 @@ export class CandidateGuard {
     const previousUrl = this.navigationService.getPreviousUrl();
 
     if (
-      state.url.includes('project-list') ||
+      state.url.includes('offre-mission-interim') ||
       state.url.includes('project-details')
     ) {
       return true;

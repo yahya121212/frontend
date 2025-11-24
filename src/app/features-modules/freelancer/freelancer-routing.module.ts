@@ -90,7 +90,7 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'project-list',
+        path: 'offre-mission-interim',
         loadChildren: () =>
           import('./project/project-list/project-list.module').then(
             (m) => m.ProjectListModule

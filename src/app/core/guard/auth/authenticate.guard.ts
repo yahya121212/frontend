@@ -22,7 +22,7 @@ export class AuthenticateGuard {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    if (state.url.includes('project-list')) {
+    if (state.url.includes('offre-mission-interim')) {
       return true;
     }
     const isLoggedIn = this.authService.isLogged(); // Replace with your actual logic
